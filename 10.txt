@@ -1,0 +1,55 @@
+Global regulations have shifted from treating social media platforms as neutral passive utilities to legally treating them as systemic infrastructure with severe financial liabilities. Governed by strict compliance rules, major tech companies face aggressive oversight to dismantle foreign state-backed political operations. [1, 2, 3, 4, 5] 
+------------------------------
+## 1. Systemic Risk Management Frameworks## EU Digital Services Act (DSA)
+The most legally advanced architecture is the European Union's [Digital Services Act (DSA)](https://ec.europa.eu/commission/presscorner/detail/en/ip_24_1707), which classifies any platform with over 45 million active regional users as a Very Large Online Platform (VLOP). [6] 
+
+* The Mandate (Articles 34 & 35): VLOPs are legally required to run exhaustive, proactive annual self-assessments detailing how their algorithms, user interfaces, or core features create "systemic risks" to democratic processes. They must explicitly map out how malicious foreign threat actors might manipulate their networks to poison civic discourse. [7, 8] 
+* Enforcement & Fines: If a platform fails to stop coordinated inauthentic behavior or ignores foreign manipulation vulnerabilities, the European Commission can issue massive financial penalties of up to 6% of the company's total worldwide annual turnover. [9] 
+
+## The Co-Regulation Model
+The EU legally integrated the voluntary [Code of Practice on Disinformation](https://ec.europa.eu/commission/presscorner/detail/en/ip_25_505) into the official DSA compliance framework. By doing so, adhering strictly to the Code—by sharing real-time data with trusted researchers and standardizing fact-checking—serves as the primary baseline for determining whether a platform is fulfilling its legal duties to block foreign interference. [5, 8, 10] 
+------------------------------
+## 2. Algorithmic and Operational Obligations
+To satisfy regulators, social media networks are legally forced to adapt specific algorithmic and backend changes during elections: [1] 
+
+  [ REGULATORY DEMAND ]             [ PLATFORM DEPLOYMENT ]           [ SYSTEM EFFECT ]
+  Mitigate Civic Risk   ─────────►  Tweak Recommender Loops ─────────► De-rank State Media
+  Inject Transparency   ─────────►  Build Public Ad Ledgers ─────────► Disclose Dark Money
+  Verify Ad Buyers      ─────────►  Mandate Passport Checks ─────────► Stop Foreign Funding
+
+
+* Recommender System Tuning: Under the DSA Data Access Framework, platforms must grant independent regulators and civil society researchers direct API access to study their content recommendation systems. Regulators demand that platforms adjust their algorithms to actively downrank or suppress known foreign state-run propaganda pipelines. [1, 5, 8, 11, 12] 
+* The "Trusted Flaggers" System: Under DSA Article 22, social media companies must prioritize content removal requests sent by government-certified independent bodies. This design is optimized to bypass slow content moderation backlogs and dismantle coordinated foreign troll campaigns within minutes of detection. [13] 
+
+------------------------------
+## 3. Financial and Transparency Crackdowns## The EU Political Advertising Regulation [12] 
+Passed to run concurrently with platform governance, [Regulation 2024/900 on the Transparency and Targeting of Political Advertising](https://www.europeanpapers.eu/e-journal/role-european-union-protecting-democracy-through-legislation-case-disinformation) targets the financial engine of foreign election meddling. [12] 
+
+* Micro-targeting Restrictions: The law places severe limits on utilizing sensitive user profiles—such as specific religious affiliations, sexual orientations, or precise political leans—for paid political ads, taking away the exact data profiles foreign actors use for micro-targeted psychological operations. [5, 12, 14] 
+* Public Repository Auditing: Platforms must hold searchable digital libraries detailing exactly who paid for an election ad, how much they spent, and the specific voter segment targeted. [14] 
+
+------------------------------
+## 4. Global Geopolitical Tension & Legal Friction [12] 
+The aggressive extraterritorial push of these digital laws has triggered friction across international borders:
+
+* Jurisdictional Clashes: Because major tech platforms generally deploy unified content policies globally, enforcement of European laws directly influences what users experience in other nations. [12, 15] 
+* Free Speech Disputes: Formal investigations, like those led by the [U.S. House Judiciary Committee](https://judiciary.house.gov/media/press-releases/foreign-censorship-threat-how-european-unions-digital-services-act-compels), argue that EU-mandated compliance frameworks force American social media companies to over-censor lawful speech globally to prevent heavy European regulatory fines. [15, 16] 
+
+Would you like to examine how platforms balance these regulatory rules with free expression protections, or should we look at upcoming digital bills currently being debated outside the EU?
+
+[1] [https://www.youtube.com](https://www.youtube.com/watch?v=E2kDwxEoWFM&t=402)
+[2] [https://review.law.stanford.edu](https://review.law.stanford.edu/wp-content/uploads/sites/3/2022/05/Sitaraman-74-Stan.-L.-Rev.-1073.pdf)
+[3] [https://studentbriefs.law.gwu.edu](https://studentbriefs.law.gwu.edu/ilpb/2021/12/08/online-content-regulation-an-international-comparison/)
+[4] [https://www.youtube.com](https://www.youtube.com/watch?v=-pJl08Wv0DQ)
+[5] [https://www.cfr.org](https://www.cfr.org/articles/social-media-and-online-speech-how-should-countries-regulate-tech-giants)
+[6] [https://ec.europa.eu](https://ec.europa.eu/commission/presscorner/detail/en/ip_24_1707)
+[7] [https://www.isdglobal.org](https://www.isdglobal.org/isd-explainer/eu-digital-services-act/)
+[8] [https://dsa-observatory.eu](https://dsa-observatory.eu/2026/03/04/how-has-the-dsa-performed-in-protecting-election-integrity/)
+[9] [https://www.cogitatiopress.com](https://www.cogitatiopress.com/mediaandcommunication/article/download/9615/4391?utm_source=chatgpt.com)
+[10] [https://ec.europa.eu](https://ec.europa.eu/commission/presscorner/detail/en/ip_25_505)
+[11] [https://policyreview.info](https://policyreview.info/articles/analysis/election-research-data-access-dsa)
+[12] [https://www.europeanpapers.eu](https://www.europeanpapers.eu/e-journal/role-european-union-protecting-democracy-through-legislation-case-disinformation)
+[13] [https://judiciary.house.gov](https://judiciary.house.gov/sites/evo-subsites/republicans-judiciary.house.gov/files/2025-07/DSA_Report%26Appendix%2807.25.25%29.pdf)
+[14] [https://www.brennancenter.org](https://www.brennancenter.org/our-work/analysis-opinion/social-media-now-prime-conduit-foreign-interference)
+[15] [https://judiciary.house.gov](https://judiciary.house.gov/media/press-releases/foreign-censorship-threat-how-european-unions-digital-services-act-compels)
+[16] [https://judiciary.house.gov](https://judiciary.house.gov/sites/evo-subsites/republicans-judiciary.house.gov/files/2025-07/DSA_Report%26Appendix%2807.25.25%29.pdf)
