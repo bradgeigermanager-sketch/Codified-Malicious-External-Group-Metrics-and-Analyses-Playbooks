@@ -1,0 +1,208 @@
+To align the metadata precisely with how an advanced threat actor or counterintelligence framework operates, we must shift from simple keyword tags to Generalized Operational Conditions. These conditions describe the fundamental state of the operation, stripping out specific technical jargon so that they can apply universally to any comparable attack vector.
+------------------------------
+## Part 1: Updated Generalized Conditions Schema
+The metadata arrays have been restructured into three definitive behavioral states:
+
+* operational_viability_conditions: Conditions that prove the operation is proceeding completely unimpeded.
+* compromise_and_failure_conditions: The generalized state of the operation when discovered, blocked, or decoupled.
+* strategic_vulnerabilities_exposed: The exact vulnerability category exposed when a failure occurs.
+
+{
+  "tactic_id": "string",
+  "metric_id": "string",
+  "metric_name": "string",
+  "operational_viability_conditions": [
+    "generalized_states indicating uninhibited infrastructure or human movement"
+  ],
+  "compromise_and_failure_conditions": [
+    "generalized_states indicating systematic detection, neutralisation, or collapse"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "the structural blind spot revealed by a failure condition"
+  ]
+}
+
+------------------------------
+## Part 2: Upgraded Tactical Implementations (A through H)## DOMAIN 1: Digital & Cyber Operations (DCO)## TACTIC A: Algorithmic Mimicry (SUB-1.1)
+
+{
+  "tactic_id": "TAC-A",
+  "metric_id": "MTR-A-01",
+  "metric_name": "Account Longevity Rate (ALR)",
+  "operational_viability_conditions": [
+    "behavioral_equivalence_to_organic_population",
+    "uninterrupted_technical_persistence",
+    "successful_heuristic_evasion"
+  ],
+  "compromise_and_failure_conditions": [
+    "signature_pattern_recognition",
+    "automated_infrastructure_decoupling",
+    "mass_behavioral_anomaly_triggering"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "automation_signature_leakage",
+    "hosting_infrastructure_attribution"
+  ]
+}
+
+## TACTIC C: Adversarial AI Cybersquatting (SUB-1.2)
+
+{
+  "tactic_id": "TAC-C",
+  "metric_id": "MTR-C-01",
+  "metric_name": "Domain Whitelisting Velocity",
+  "operational_viability_conditions": [
+    "acquired_institutional_trust_cloning",
+    "unimpeded_algorithmic_indexing",
+    "structural_mimicry_integrity"
+  ],
+  "compromise_and_failure_conditions": [
+    "infrastructure_reputation_collapse",
+    "systemic_search_engine_de_indexing",
+    "legal_domain_revocation"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "technical_provenance_tracing",
+    "lookalike_fingerprinting"
+  ]
+}
+
+------------------------------
+## DOMAIN 2: Cognitive & Information Warfare (CIW)## TACTIC B: Data-Driven Narrative Wedge (SUB-2.1)
+
+{
+  "tactic_id": "TAC-B",
+  "metric_id": "MTR-B-01",
+  "metric_name": "Organic Multiplication Ratio (OMR)",
+  "operational_viability_conditions": [
+    "unwitting_native_amplification",
+    "tribal_cognitive_resonance",
+    "autonomous_narrative_cascading"
+  ],
+  "compromise_and_failure_conditions": [
+    "public_source_attribution_exposure",
+    "audience_cognitive_immunity_activation",
+    "algorithmic_distribution_throttling"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "narrative_origin_unmasking",
+    "target_population_fatigue"
+  ]
+}
+
+## TACTIC D: Continuous Outrage Inoculation (SUB-2.2)
+
+{
+  "tactic_id": "TAC-D",
+  "metric_id": "MTR-D-01",
+  "metric_name": "Policy Paralysis Duration",
+  "operational_viability_conditions": [
+    "systemic_governance_distraction",
+    "agenda_hijacking_success",
+    "permanent_bipartisan_fracture"
+  ],
+  "compromise_and_failure_conditions": [
+    "unifying_institutional_counter_narrative",
+    "rapid_public_attention_diversion",
+    "societal_outrage_exhaustion"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "over_saturation_diminishing_returns",
+    "cross_vector_message_contradiction"
+  ]
+}
+
+------------------------------
+## DOMAIN 3: Physical HUMINT & Infiltration (PHI)## TACTIC E: Diplomatic Cover Operations (SUB-3.1)
+
+{
+  "tactic_id": "TAC-E",
+  "metric_id": "MTR-E-01",
+  "metric_name": "Intelligence Immunity Protection Rate",
+  "operational_viability_conditions": [
+    "sovereign_immunity_exploitation_intact",
+    "unimpeded_diplomatic_transit",
+    "protected_sanctuary_utilization"
+  ],
+  "compromise_and_failure_conditions": [
+    "host_nation_credential_revocation",
+    "official_diplomatic_expulsion",
+    "physical_detention_via_treaty_breach"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "excessive_operational_profile_leakage",
+    "host_nation_political_retaliation"
+  ]
+}
+
+## TACTIC F: State-Issued Identity Laundering (SUB-3.1)
+
+{
+  "tactic_id": "TAC-F",
+  "metric_id": "MTR-F-01",
+  "metric_name": "Legend Durability Rating",
+  "operational_viability_conditions": [
+    "cryptographic_credential_validation",
+    "biometric_verification_evasion",
+    "seamless_background_data_harmony"
+  ],
+  "compromise_and_failure_conditions": [
+    "recognized_as_an_imposter",
+    "biometric_record_mismatch",
+    "historical_genealogy_anomaly_exposure"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "back_end_civil_registry_desynchronization",
+    "cross_border_travel_pattern_matching"
+  ]
+}
+
+## TACTIC G: Deep-Cover "Illegals" (SUB-3.2)
+
+{
+  "tactic_id": "TAC-G",
+  "metric_id": "MTR-G-01",
+  "metric_name": "Asset Co-optation Velocity",
+  "operational_viability_conditions": [
+    "trusted_insider_status_achieved",
+    "deniable_human_influence_anchoring",
+    "unvetted_civic_embedding"
+  ],
+  "compromise_and_failure_conditions": [
+    "target_initiated_blowback",
+    "counterintelligence_surveillance_containment",
+    "background_vetting_mechanism_rejection"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "interpersonal_approach_anomalies",
+    "secure_communication_vector_interception"
+  ]
+}
+
+## TACTIC H: Digital-Physical Convergence (SUB-3.2)
+
+{
+  "tactic_id": "TAC-H",
+  "metric_id": "MTR-H-01",
+  "metric_name": "Systemic Disruption Index",
+  "operational_viability_conditions": [
+    "kinetic_activation_of_digital_narrative",
+    "hybrid_vector_synchronization",
+    "uninhibited_clandestine_capital_transfer"
+  ],
+  "compromise_and_failure_conditions": [
+    "clandestine_finance_channel_freezing",
+    "physical_courier_interception",
+    "digital_to_physical_operational_decoupling"
+  ],
+  "strategic_vulnerabilities_exposed": [
+    "ground_level_operational_security_breach",
+    "financial_node_visibility_exposure"
+  ]
+}
+
+------------------------------
+## Advancing the Red Team Exercise
+Now that the failure conditions are fully generalized (e.g., recognized_as_an_imposter), the adversary framework is complete. We can now transition to using this against them.
+Should we pivot to the Blue Team Operational Manual to outline how counterintelligence and automated systems systematically trigger these exact compromise_and_failure_conditions? Alternatively, we could create a Defensive Sensor Matrix that details the tools needed to watch for these vulnerabilities.
+
