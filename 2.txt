@@ -1,0 +1,211 @@
+To make these schemas highly queryable for machine learning classifiers, automated SIEM alerts, or threat intelligence search engines, we can ingest universal Metadata Tags directly into the generalized template.
+Below is the updated Generalized Schema, followed by the expanded data models for all eight tactics (A through H), injected with standardized condition tags for success and failure.
+------------------------------
+## Part 1: Updated Generalized Metrics Schema
+We have added three global arrays: global_success_tags, global_failure_tags, and operational_context_tags.
+
+{
+  "tactic_id": "string",
+  "metric_id": "string",
+  "metric_name": "string",
+  "domain": "string",
+  "sub_domain": "string",
+  "measurement_type": "string",
+  "success_threshold": {
+    "condition": "string",
+    "value": "numeric",
+    "unit": "string"
+  },
+  "global_success_tags": [
+    "keyword_tags indicating uninhibited operational progression"
+  ],
+  "global_failure_tags": [
+    "keyword_tags indicating interception, detection, or friction"
+  ],
+  "operational_context_tags": [
+    "environment keywords (e.g., social_media, civil_registry, border_control)"
+  ],
+  "failure_indicators": [
+    "string"
+  ],
+  "data_sources": [
+    "string"
+  ]
+}
+
+------------------------------
+## Part 2: Expanded Tactical Implementations## DOMAIN 1: Digital & Cyber Operations (DCO)## TACTIC A: Algorithmic Mimicry (SUB-1.1)
+
+{
+  "tactic_id": "TAC-A",
+  "metric_id": "MTR-A-01",
+  "metric_name": "Account Longevity Rate (ALR)",
+  "domain": "Digital & Cyber Operations",
+  "sub_domain": "Network Evasion & Automation",
+  "measurement_type": "Technical",
+  "success_threshold": {"condition": "GREATER_THAN", "value": 90, "unit": "Days Active"},
+  "global_success_tags": ["evasion_successful", "low_entropy_behavior", "bypass_heuristic", "unflagged_persistence", "human_equivalence"],
+  "global_failure_tags": ["automated_takedown", "fingerprint_match", "pattern_anomaly", "mass_ban", "shadowbanned", "captcha_lock"],
+  "operational_context_tags": ["social_media", "botnet_orchestration", "llm_agent", "automated_safety_filters"],
+  "failure_indicators": [
+    "Mass automated platform bans within 72 hours of deployment",
+    "Platform captchas triggering across >15% of the fleet",
+    "Immediate shadowbanning restricting impression reach to zero"
+  ],
+  "data_sources": ["Internal bot fleet telemetry", "Public platform engagement logs"]
+}
+
+## TACTIC C: Adversarial AI Cybersquatting (SUB-1.2)
+
+{
+  "tactic_id": "TAC-C",
+  "metric_id": "MTR-C-01",
+  "metric_name": "Domain Whitelisting Velocity",
+  "domain": "Digital & Cyber Operations",
+  "sub_domain": "Synthetic Platform Architecture",
+  "measurement_type": "Technical",
+  "success_threshold": {"condition": "LESS_THAN", "value": 5, "unit": "Days to Indexing"},
+  "global_success_tags": ["organic_indexing", "seo_penetration", "reputation_cloning", "algorithmic_trust", "feed_whitelist"],
+  "global_failure_tags": ["dns_sinkhole", "domain_seizure", "blacklist_trigger", "de_indexed", "threat_intel_flag"],
+  "operational_context_tags": ["dns_infrastructure", "seo_manipulation", "synthetic_media", "news_lookalikes"],
+  "failure_indicators": [
+    "Domain added to global anti-phishing feeds (e.g., Spamhaus, Cloudflare)",
+    "Search engines completely de-indexing the clone domain",
+    "Registrar seizing the domain name for Terms of Service violations"
+  ],
+  "data_sources": ["SEO indexing tools", "DNS threat intelligence databases"]
+}
+
+------------------------------
+## DOMAIN 2: Cognitive & Information Warfare (CIW)## TACTIC B: Data-Driven Narrative Wedge (SUB-2.1)
+
+{
+  "tactic_id": "TAC-B",
+  "metric_id": "MTR-B-01",
+  "metric_name": "Organic Multiplication Ratio (OMR)",
+  "domain": "Cognitive & Information Warfare",
+  "sub_domain": "Hyper-Targeted Audience Engagement",
+  "measurement_type": "Behavioral",
+  "success_threshold": {"condition": "GREATER_THAN", "value": 10.0, "unit": "User Shares per Bot Post"},
+  "global_success_tags": ["organic_echo", "native_amplification", "cognitive_resonance", "tribal_outrage", "viral_cascade"],
+  "global_failure_tags": ["community_debunk", "fact_check_label", "audience_immunity", "bot_isolation", "narrative_fizzle"],
+  "operational_context_tags": ["audience_segmentation", "psychographic_targeting", "local_grievance", "voter_subversion"],
+  "failure_indicators": [
+    "Content receives high bot engagement but zero native user shares",
+    "Public community notes exposing the post as a foreign operation",
+    "Platform fact-checkers applying visibility reduction tags"
+  ],
+  "data_sources": ["Social network analysis tools", "Comment-to-share metrics"]
+}
+
+## TACTIC D: Continuous Outrage Inoculation (SUB-2.2)
+
+{
+  "tactic_id": "TAC-D",
+  "metric_id": "MTR-D-01",
+  "metric_name": "Policy Paralysis Duration",
+  "domain": "Cognitive & Information Warfare",
+  "sub_domain": "Strategic Societal Disruption",
+  "measurement_type": "Statistical",
+  "success_threshold": {"condition": "GREATER_THAN", "value": 14, "unit": "Days of Media Dominance"},
+  "global_success_tags": ["legislative_paralysis", "agenda_hijack", "bipartisan_fracture", "media_saturation", "institutional_gridlock"],
+  "global_failure_tags": ["unifying_narrative", "rapid_de_escalation", "public_fatigue", "bipartisan_consensus", "media_pivot"],
+  "operational_context_tags": ["mass_media", "legislative_body", "public_sentiment", "societal_faultlines"],
+  "failure_indicators": [
+    "Target government releases non-partisan unifying statements that de-escalate the crisis",
+    "Mainstream news media pivots to unrelated national events within 48 hours",
+    "The public displays narrative fatigue, dropping total engagement numbers"
+  ],
+  "data_sources": ["Cable news transcripts", "Legislative calendars and logs"]
+}
+
+------------------------------
+## DOMAIN 3: Physical HUMINT & Infiltration (PHI)## TACTIC E: Diplomatic Cover Operations (SUB-3.1)
+
+{
+  "tactic_id": "TAC-E",
+  "metric_id": "MTR-E-01",
+  "metric_name": "Intelligence Immunity Protection Rate",
+  "domain": "Physical HUMINT & Infiltration",
+  "sub_domain": "Legal & Sovereign Mechanism Exploitation",
+  "measurement_type": "Legal",
+  "success_threshold": {"condition": "EQUAL_TO", "value": 100, "unit": "Percentage of Arrest Evasions"},
+  "global_success_tags": ["immunity_shield", "legal_impunity", "protocol_exploitation", "secure_embassy_base", "unimpeded_transit"],
+  "global_failure_tags": ["persona_non_grata", "diplomatic_expulsion", "surveillance_exposure", "credential_revocation"],
+  "operational_context_tags": ["embassy_consulate", "vienna_convention", "diplomatic_corps", "official_cover"],
+  "failure_indicators": [
+    "Host nation officially revokes diplomatic credentials",
+    "Officer is declared Persona Non Grata (PNG) and expelled before operations complete",
+    "Host nation breaches protocol and physically detains the asset"
+  ],
+  "data_sources": ["Foreign ministry diplomatic circulars", "Counterintelligence logs"]
+}
+
+## TACTIC F: State-Issued Identity Laundering (SUB-3.1)
+
+{
+  "tactic_id": "TAC-F",
+  "metric_id": "MTR-F-01",
+  "metric_name": "Legend Durability Rating",
+  "domain": "Physical HUMINT & Infiltration",
+  "sub_domain": "Legal & Sovereign Mechanism Exploitation",
+  "measurement_type": "Statistical",
+  "success_threshold": {"condition": "GREATER_THAN", "value": 5, "unit": "Years Undetected"},
+  "global_success_tags": ["biometric_bypass", "clean_record_validation", "alias_integrity", "database_harmony", "seamless_entry"],
+  "global_failure_tags": ["biometric_mismatch", "lineage_anomaly", "alias_exposure", "watchlist_hit", "secondary_screening_fail"],
+  "operational_context_tags": ["border_control", "civil_registry", "biometric_databases", "identity_laundering"],
+  "failure_indicators": [
+    "Biometric systems flag a facial/fingerprint mismatch against alias databases",
+    "Deep background checks by banks reveal structural historical gaps in the persona",
+    "Asset is flagged by automated surveillance traveling under conflicting valid passports"
+  ],
+  "data_sources": ["Border biometric matching logs", "Financial compliance audits"]
+}
+
+## TACTIC G: Deep-Cover "Illegals" (SUB-3.2)
+
+{
+  "tactic_id": "TAC-G",
+  "metric_id": "MTR-G-01",
+  "metric_name": "Asset Co-optation Velocity",
+  "domain": "Physical HUMINT & Infiltration",
+  "sub_domain": "Deep-Cover Field Operations",
+  "measurement_type": "Behavioral",
+  "success_threshold": {"condition": "LESS_THAN", "value": 12, "unit": "Months to Cultivate Target"},
+  "global_success_tags": ["trusted_insider", "civic_embedding", "influence_anchoring", "deniable_handling", "target_compromise"],
+  "global_failure_tags": ["target_blowback", "counterintel_surveillance", "vetting_rejection", "insider_report"],
+  "operational_context_tags": ["deep_cover", "civic_organizations", "political_clubs", "humint_cultivation"],
+  "failure_indicators": [
+    "The target reports the deep-cover asset's suspicious approach to law enforcement",
+    "Counterintelligence places the asset under active surveillance, neutralizing them",
+    "The asset fails background vetting required to join targeted civic or political boards"
+  ],
+  "data_sources": ["Comms interception logs", "Counterintelligence surveillance files"]
+}
+
+## TACTIC H: Digital-Physical Convergence (SUB-3.2)
+
+{
+  "tactic_id": "TAC-H",
+  "metric_id": "MTR-H-01",
+  "metric_name": "Systemic Disruption Index",
+  "domain": "Physical HUMINT & Infiltration",
+  "sub_domain": "Deep-Cover Field Operations",
+  "measurement_type": "Statistical",
+  "success_threshold": {"condition": "GREATER_THAN", "value": 1, "unit": "Real-World Manifestation"},
+  "global_success_tags": ["kinetic_activation", "hybrid_synchronization", "unrest_manifestation", "cash_delivery_successful", "localized_chaos"],
+  "global_failure_tags": ["funding_freeze", "handoff_interception", "operational_decoupling", "riot_fizzle", "courier_arrest"],
+  "operational_context_tags": ["hybrid_warfare", "civil_unrest", "clandestine_finance", "ground_coordination"],
+  "failure_indicators": [
+    "In-person handoffs of operational funds or technology are intercepted by police",
+    "Digital networks and physical operators fail to sync, causing protests to fizzle out",
+    "Financial channels used to pay local agitators are successfully frozen by banks"
+  ],
+  "data_sources": ["Police incident reports", "Financial intelligence unit (FIU) logs"]
+}
+
+------------------------------
+## Advancing the Red Team Exercise
+By embedding these standardized tags, we have built a data structure ready to be imported into an analytics model.
+Where should we guide the project next? We can create the Blue Team Detection Framework—mapping out the exact technical sensors needed to detect the tags in the "global_failure_tags" lists—or we can write a simulated attack timeline to show how a threat actor leverages these tags across a multi-month campaign.
+
