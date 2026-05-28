@@ -1,0 +1,79 @@
+To transition this project into a highly structured framework, we can group the eight identified tactics into three primary Domains and six operational Sub-Domains.
+This classification separates purely digital operations from physical espionage, while capturing the precise hybrid space where they intersect.
+------------------------------
+## Project Domain and Sub-Domain Taxonomy
+
+                          ┌────────────────────────────────────────┐
+                          │   FOREIGN INTERFERENCE MASTER PROJECT  │
+                          └───────────────────┬────────────────────┘
+                                              │
+         ┌────────────────────────────────────┼────────────────────────────────────┐
+         ▼                                    ▼                                    ▼
+┌──────────────────┐                 ┌──────────────────┐                 ┌──────────────────┐
+│ DIGITAL & CYBER  │                 │    COGNITIVE &   │                 │ PHYSICAL HUMINT  │
+│    OPERATIONS    │                 │ INFORMATION WAR  │                 │  & INFILTRATION  │
+└────────┬─────────┘                 └────────┬─────────┘                 └────────┬─────────┘
+         │                                    │                                    │
+ ┌───────┴───────┐                    ┌───────┴───────┐                    ┌───────┴───────┐
+ ▼               ▼                    ▼               ▼                    ▼               ▼
+Network        Synthetic             Audience        Strategic            Legal &        Deep-Cover
+Evasion        Platforms            Engagement      Disruption           Sovereign       Field Ops
+
+------------------------------
+## Domain 1: Digital & Cyber Operations (DCO)
+Focuses on the technical, infrastructure, and backend execution layers used to establish a baseline presence in the target nation's digital ecosystem.
+## Sub-Domain 1.1: Network Evasion & Automation
+
+* Tactics Included:
+* TACTIC A: Algorithmic Mimicry
+* Focus: Evading automated security filters, managing bot lifespans, optimizing hosting/token costs, and mimicking authentic human digital behavior.
+
+## Sub-Domain 1.2: Synthetic Platform Architecture
+
+* Tactics Included:
+* TACTIC C: Adversarial AI Cybersquatting
+* Focus: The automated creation of lookalike technical infrastructure, domain hijacking, layout scraping, and generating scalable, AI-driven fake distribution nodes.
+
+------------------------------
+## Domain 2: Cognitive & Information Warfare (CIW)
+Focuses on psychological manipulation, narrative weaponization, and the long-term exploitation of societal and political vulnerabilities.
+## Sub-Domain 2.1: Hyper-Targeted Audience Engagement
+
+* Tactics Included:
+* TACTIC B: Data-Driven Narrative Wedge
+* Focus: Scraping domestic marketing data, isolating hyper-local geographic or municipal grievances, and forcing high organic amplification by real users.
+
+## Sub-Domain 2.2: Strategic Societal Disruption
+
+* Tactics Included:
+* TACTIC D: Continuous Outrage Inoculation
+* Focus: Overloading public consciousness, driving political polarization indices, and manufacturing artificial micro-crises to paralyze domestic policymaking.
+
+------------------------------
+## Domain 3: Physical HUMINT & Infiltration (PHI)
+Focuses on the deployment of physical human assets on the ground, bypassing border controls, and exploiting international legal protocols.
+## Sub-Domain 3.1: Legal & Sovereign Mechanism Exploitation
+
+* Tactics Included:
+* TACTIC E: Diplomatic Cover Operations
+   * TACTIC F: State-Issued Identity Laundering
+* Focus: Weaponizing international treaties (like the Vienna Convention) and utilizing authentic, cryptographically valid government documents issued under fabricated names to pass border biometrics.
+
+## Sub-Domain 3.2: Deep-Cover Field Operations
+
+* Tactics Included:
+* TACTIC G: Deep-Cover "Illegals"
+   * TACTIC H: Digital-Physical Convergence
+* Focus: Multi-transit travel obfuscation, acquisition of neutral third-party documentation, multi-year community seeding, and ground-level financing or handling of domestic assets.
+
+------------------------------
+## Consolidated Classification Index (For Project ToC)
+
+| Domain Code & Title | Sub-Domain Code & Title | Assigned Tactics |
+|---|---|---|
+| DOM-1: Digital & Cyber Operations | SUB-1.1: Network Evasion & Automation SUB-1.2: Synthetic Platform Architecture | Tactic A Tactic C |
+| DOM-2: Cognitive & Information Warfare | SUB-2.1: Hyper-Targeted Engagement SUB-2.2: Strategic Societal Disruption | Tactic B Tactic D |
+| DOM-3: Physical HUMINT & Infiltration | SUB-3.1: Sovereign Mechanism Exploitation SUB-3.2: Deep-Cover Field Operations | Tactic E, Tactic F Tactic G, Tactic H |
+
+How would you like to build out this framework next? We can deep-dive into Domain 1 to map out the technical code indicators of algorithmic mimicry, or we can look at the counterintelligence challenges of Domain 3 regarding state-issued identity laundering.
+
