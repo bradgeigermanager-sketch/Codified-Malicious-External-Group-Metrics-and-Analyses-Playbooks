@@ -1,0 +1,149 @@
+### Zero‑trust identity layer — project overview
+
+| Area                    | Component                          | Purpose                                           |
+|-------------------------|------------------------------------|---------------------------------------------------|
+| Identity core           | Identity provider & directory      | Single source of truth for users, services, devices |
+| Access control          | Policy engine (PDP)                | Evaluate fine‑grained access decisions            |
+| Enforcement             | Policy enforcement points (PEPs)   | Enforce decisions at apps, APIs, infra            |
+| Signals & risk          | Risk engine                        | Contextual, adaptive access decisions             |
+| Credentials & authN     | Strong auth & key management       | MFA, WebAuthn, service keys, rotation             |
+| Observability           | Identity telemetry & audit         | Full trace of “who did what, where, when, how”    |
+| Governance              | Lifecycle & least‑privilege        | Joiner/mover/leaver, role reviews, recertification|
+
+---
+
+## 1. Project list (zero‑trust identity layer)
+
+1. **Identity Provider & Directory Service**
+   - **Goal:** Centralize identities for humans, services, and devices.
+2. **Authentication Service (MFA + WebAuthn)**
+   - **Goal:** Strong, phishing‑resistant authentication for all critical systems.
+3. **Authorization Policy Engine (PDP)**
+   - **Goal:** Central ABAC/RBAC engine for “who can do what on which resource under which conditions.”
+4. **Policy Enforcement Points (PEPs)**
+   - **Goal:** SDKs/proxies/sidecars that call the PDP and enforce allow/deny at:
+     - APIs, microservices, admin panels, VPN, bastions, CI/CD, etc.
+5. **Risk & Context Engine**
+   - **Goal:** Evaluate device posture, geo, time, behavior, and threat intel to adjust access (step‑up, deny, restrict).
+6. **Session & Token Service**
+   - **Goal:** Issue, validate, and revoke short‑lived tokens (OIDC/OAuth2/JWT) with continuous re‑auth for sensitive actions.
+7. **Identity Telemetry & Audit Pipeline**
+   - **Goal:** Stream all authN/authZ events into a central lake for detection, forensics, and compliance.
+8. **Identity Lifecycle Management (ILM)**
+   - **Goal:** Automate provisioning, deprovisioning, and access changes from HR/CRM/source‑of‑truth systems.
+9. **Privilege & Role Governance**
+   - **Goal:** Define roles, least‑privilege baselines, periodic access reviews, and emergency break‑glass flows.
+10. **Admin & Self‑Service Portals**
+    - **Goal:** Safe interfaces for admins (policy, roles, approvals) and users (MFA reset, device registration).
+
+---
+
+## 2. Checklist for implementation
+
+### A. Identity core
+
+- **Source of truth:**
+  - **[ ]** Choose primary identity store (e.g., directory + HR system).
+  - **[ ]** Define schemas for: `User`, `ServiceAccount`, `Device`, `Group`, `Role`.
+- **Synchronization:**
+  - **[ ]** Build connectors to HR/CRM/partner systems.
+  - **[ ]** Implement conflict resolution and change logs.
+- **Uniqueness & identifiers:**
+  - **[ ]** Global unique IDs for all identities.
+  - **[ ]** Immutable internal IDs, stable external IDs.
+
+### B. Authentication (authN)
+
+- **[ ]** Implement WebAuthn / FIDO2 for high‑value accounts.
+- **[ ]** Implement MFA (TOTP, push, hardware keys) with policy‑based enforcement.
+- **[ ]** Support OIDC/OAuth2/SAML for apps.
+- **[ ]** Central login pages with branding + phishing‑resistant UX.
+- **[ ]** Risk‑based step‑up (e.g., new device, new geo, high‑risk action).
+
+### C. Authorization (authZ) & policy engine
+
+- **[ ]** Choose model: RBAC + ABAC (attributes: department, clearance, device posture, risk score).
+- **[ ]** Define policy language (e.g., Rego‑like, Cedar‑like, or custom DSL).
+- **[ ]** Implement PDP service with:
+  - **[ ]** `evaluate(subject, action, resource, context)` API.
+  - **[ ]** Policy versioning and rollback.
+- **[ ]** Build PEP libraries/sidecars for:
+  - **[ ]** HTTP APIs (gateway plugin).
+  - **[ ]** gRPC/microservices.
+  - **[ ]** Admin UIs.
+  - **[ ]** SSH/bastion access.
+
+### D. Risk & context engine
+
+- **[ ]** Ingest device posture (MDM/EDR), IP reputation, geo, time, velocity.
+- **[ ]** Compute per‑session and per‑request risk scores.
+- **[ ]** Expose `getRisk(subject, device, context)` API.
+- **[ ]** Integrate risk into PDP decisions (e.g., deny or require step‑up).
+
+### E. Tokens, sessions, and revocation
+
+- **[ ]** Short‑lived access tokens, longer‑lived refresh tokens.
+- **[ ]** Central token introspection endpoint.
+- **[ ]** Global logout and revocation lists.
+- **[ ]** Continuous access evaluation (re‑check policy mid‑session).
+
+### F. Telemetry & audit
+
+- **[ ]** Log every authN/authZ decision with:
+  - subject, resource, action, decision, policy ID, risk, device, IP, time.
+- **[ ]** Stream logs to SIEM/data lake.
+- **[ ]** Build dashboards for:
+  - **[ ]** Failed logins, unusual locations, privilege escalations.
+  - **[ ]** Policy denials on sensitive resources.
+- **[ ]** Implement tamper‑evident logging for high‑assurance trails.
+
+### G. Lifecycle & governance
+
+- **[ ]** Joiner/mover/leaver workflows:
+  - **[ ]** Auto‑provision baseline access on hire.
+  - **[ ]** Adjust access on role/department change.
+  - **[ ]** Immediate deprovision on termination.
+- **[ ]** Periodic access reviews:
+  - **[ ]** Managers review direct reports’ access.
+  - **[ ]** System owners review privileged roles.
+- **[ ]** Break‑glass accounts:
+  - **[ ]** Strictly limited, heavily logged, rotated.
+
+### H. Admin & self‑service
+
+- **[ ]** Admin console:
+  - **[ ]** Policy management with change history.
+  - **[ ]** Role and group management.
+  - **[ ]** Risk and anomaly views.
+- **[ ]** User self‑service:
+  - **[ ]** MFA device management.
+  - **[ ]** Session overview and revocation.
+  - **[ ]** Access request workflows.
+
+---
+
+## 3. Short descriptions of key portions
+
+- **Identity schema & directory design:**  
+  Data models and storage layout for users, services, devices, groups, and roles, including indexing and replication.
+
+- **AuthN service (API + flows):**  
+  Endpoints and flows for login, MFA, WebAuthn registration, token issuance, and session management.
+
+- **Policy engine (PDP) & language:**  
+  The core decision service plus a human‑readable policy language, with examples for least‑privilege, environment‑based, and risk‑adaptive rules.
+
+- **PEP integrations:**  
+  Concrete middleware/sidecars for API gateways, microservices, and admin UIs that call the PDP and enforce decisions.
+
+- **Risk engine:**  
+  Data ingestion, scoring logic, and APIs that feed risk into both authN (step‑up) and authZ (deny/allow) decisions.
+
+- **Telemetry & audit pipeline:**  
+  Event schemas, streaming architecture, storage, and example queries/dashboards for identity‑centric detection.
+
+- **Lifecycle automation:**  
+  Workflows and connectors that keep access aligned with HR/organizational reality, with minimal manual intervention.
+
+- **Governance & review tooling:**  
+  Interfaces and processes for periodic access reviews, policy audits, and compliance reporting.
