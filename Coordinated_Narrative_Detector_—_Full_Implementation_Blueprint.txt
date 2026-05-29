@@ -1,0 +1,186 @@
+
+# Coordinated Narrative Detector — Full Implementation Blueprint
+
+This subsystem identifies **multi‑platform, multi‑actor, synchronized messaging campaigns**, including:
+
+- Foreign influence operations  
+- Bot‑amplified narratives  
+- Coordinated inauthentic behavior (CIB)  
+- Cross‑platform message seeding  
+- Hashtag brigading  
+- Narrative laundering (OSINT → influencers → mainstream)  
+- Timing‑based coordination  
+- Persona‑network orchestration  
+
+It fuses **linguistic**, **temporal**, **network**, and **behavioral** signals.
+
+---
+
+## 1. System Architecture Overview
+
+### Core Components
+- **Narrative Extraction Engine** — identifies emerging narratives across platforms  
+- **Cross‑Platform Synchronization Engine** — detects timing‑based coordination  
+- **Actor Network Analyzer** — maps relationships between accounts, personas, and bots  
+- **Linguistic Similarity Engine** — identifies shared scripts, phrasing, and talking points  
+- **Amplification Pattern Detector** — finds botnets, brigading, and mass‑engagement patterns  
+- **Threat Scenario Engine** — models known influence‑operation TTPs  
+- **Fusion Output Layer** — pushes correlated narrative events to dashboards & briefings  
+
+---
+
+## 2. Data Inputs
+
+### A. Social & Digital Platforms
+- Twitter/X  
+- Facebook  
+- Reddit  
+- TikTok  
+- YouTube  
+- Telegram  
+- Discord  
+- Forums & fringe platforms  
+
+### B. OSINT & Media Feeds
+- Newswire monitoring  
+- Blogs & alternative media  
+- State‑linked media outlets  
+- Fact‑checking feeds  
+
+### C. Influence‑Ops Subsystems
+- Sentiment Anomaly Engine  
+- Cross‑Platform Disinfo Correlator  
+- Botnet Influence Detection  
+
+### D. Metadata & Behavioral Signals
+- Posting frequency  
+- Engagement velocity  
+- Hashtag co‑occurrence  
+- Persona creation patterns  
+- Cross‑platform account linkage  
+
+---
+
+## 3. Narrative Extraction Engine
+
+### Techniques
+- Topic modeling (BERTopic, LDA, Top2Vec)  
+- Transformer‑based clustering  
+- Keyword & hashtag graphing  
+- Named entity extraction  
+- Narrative “fingerprinting”  
+
+### Outputs
+- Narrative clusters  
+- Key phrases & talking points  
+- Narrative evolution timeline  
+- Platform‑specific variants  
+
+---
+
+## 4. Cross‑Platform Synchronization Engine
+
+### Coordination Signals
+- Near‑simultaneous posting across platforms  
+- Identical phrasing within short time windows  
+- Coordinated hashtag adoption  
+- Synchronized engagement bursts  
+- Multi‑platform seeding (Telegram → Twitter → TikTok)  
+
+### Temporal Analysis
+- Sliding windows: 5m, 30m, 2h, 24h  
+- Burst detection  
+- Lag correlation (who posts first, who amplifies)  
+
+---
+
+## 5. Actor Network Analyzer
+
+### Graph Types
+- **Account Graph** — relationships between accounts  
+- **Amplification Graph** — who boosts whom  
+- **Narrative Graph** — which actors push which talking points  
+- **Persona Linkage Graph** — shared metadata, writing style, device fingerprints  
+
+### Detection Methods
+- Community detection  
+- Bot‑cluster identification  
+- Influence propagation modeling  
+- Persona similarity scoring  
+
+---
+
+## 6. Linguistic Similarity Engine
+
+### Features Analyzed
+- Shared sentence templates  
+- Repeated propaganda scripts  
+- Stylometric fingerprints  
+- Machine‑translated phrasing patterns  
+- Coordinated keyword injection  
+
+### Models Used
+- Sentence‑BERT  
+- Stylometric classifiers  
+- Transformer‑based similarity scoring  
+
+---
+
+## 7. Amplification Pattern Detector
+
+### Signals
+- Botnet amplification  
+- Hashtag brigading  
+- Mass‑reply campaigns  
+- Engagement velocity anomalies  
+- Coordinated “ratio” attempts  
+- Sudden influencer alignment  
+
+### ML Models
+- Random forest classifiers  
+- GNN‑based botnet detection  
+- Temporal anomaly models  
+
+---
+
+## 8. Threat Scenario Engine
+
+### Pre‑Built Scenarios
+- **Coordinated Inauthentic Behavior (CIB)**  
+- **Foreign State Narrative Push**  
+- **Bot‑Amplified Narrative Surge**  
+- **Cross‑Platform Narrative Laundering**  
+- **Influencer‑Driven Narrative Synchronization**  
+
+Each scenario includes:
+- Required signals  
+- Detection logic  
+- Escalation thresholds  
+- Recommended actions  
+
+---
+
+## 9. Fusion Output Layer
+
+### Outputs
+- Coordinated narrative events  
+- Actor clusters  
+- Narrative risk score  
+- Cross‑platform propagation map  
+- Leadership‑ready summaries  
+
+### Integration Points
+- Unified Threat Dashboard  
+- Leadership Briefing Generator  
+- Cross‑Vector Correlation Engine  
+
+---
+
+## 10. Governance & Oversight
+
+### Controls
+- Strict privacy & legal compliance  
+- Redaction of personal data  
+- Explainability for narrative clustering  
+- Audit logging for all detections  
+- Role‑based access  
