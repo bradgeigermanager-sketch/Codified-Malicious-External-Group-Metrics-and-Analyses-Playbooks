@@ -1,0 +1,301 @@
+
+# 🌐 **Network Telemetry Pipeline — Full Implementation Blueprint**
+
+This subsystem is the **data artery** of the entire defensive platform.  
+Everything — APT detection, lateral movement modeling, credential abuse, fusion center correlation — depends on this pipeline being:
+
+- high‑volume  
+- low‑latency  
+- lossless  
+- normalized  
+- enriched  
+- query‑optimized  
+
+Think of it as a **SIEM++**, but purpose‑built for hybrid‑threat defense.
+
+---
+
+# 1. 🎯 Purpose & Scope
+
+The Network Telemetry Pipeline must:
+
+- Collect **all network‑level signals** (north‑south + east‑west).  
+- Normalize them into a unified schema.  
+- Enrich with identity, geo, ASN, device posture, threat intel.  
+- Stream into storage for real‑time and batch analytics.  
+- Provide APIs for hunts, ML models, and correlation engines.  
+
+---
+
+# 2. 🧩 High‑Level Architecture
+
+
+
+
+
+### Core components
+
+- **Ingestion Layer**  
+  Collects raw telemetry from sensors, firewalls, proxies, DNS resolvers, EDR, cloud logs.
+
+- **Normalization & Parsing Layer**  
+  Converts heterogeneous logs into a unified schema.
+
+- **Enrichment Layer**  
+  Adds identity, device, geo, ASN, threat intel, risk context.
+
+- **Stream Router**  
+  Routes enriched events to storage, ML models, and detection engines.
+
+- **Storage Layer**  
+  Time‑series DB + columnar DB for fast analytics.
+
+- **Query & Access Layer**  
+  APIs for hunts, dashboards, ML training, and fusion center.
+
+---
+
+# 3. 📡 Telemetry Sources
+
+### 3.1 Network‑level
+
+- Netflow v5/v9/IPFIX  
+- DNS logs  
+- Proxy logs  
+- Firewall logs  
+- TLS handshake metadata (JA3/JA3S)  
+- VPN logs  
+
+### 3.2 Endpoint‑level
+
+- Process → network connection events  
+- Remote execution tools (RDP, SMB, SSH, WinRM)  
+- EDR network telemetry  
+
+### 3.3 Cloud‑level
+
+- VPC flow logs  
+- Cloud DNS  
+- API gateway logs  
+
+---
+
+# 4. 📦 Unified Telemetry Schema
+
+### 4.1 Logical event schema
+
+```json
+{
+  "event_id": "uuid",
+  "timestamp": "2026-05-28T21:42:00Z",
+  "src_ip": "10.1.2.3",
+  "src_port": 44321,
+  "dst_ip": "198.51.100.10",
+  "dst_port": 443,
+  "protocol": "TCP",
+  "bytes_in": 12345,
+  "bytes_out": 67890,
+  "identity_id": "user:alice",
+  "device_id": "device:win10-123",
+  "asn": 64500,
+  "geo": "US",
+  "tls_fingerprint": "ja3:abcd1234",
+  "dns_query": "example.com",
+  "threat_intel": {
+    "malicious": false,
+    "matched_iocs": []
+  },
+  "risk_context": {
+    "identity_risk": 0.12,
+    "device_posture": "compliant"
+  }
+}
+```
+
+### 4.2 Storage schema (columnar DB)
+
+```sql
+CREATE TABLE net_events (
+  timestamp        DateTime,
+  src_ip           IPv4,
+  src_port         UInt16,
+  dst_ip           IPv4,
+  dst_port         UInt16,
+  protocol         LowCardinality(String),
+  bytes_in         UInt64,
+  bytes_out        UInt64,
+  identity_id      String,
+  device_id        String,
+  asn              UInt32,
+  geo              LowCardinality(String),
+  tls_fingerprint  String,
+  dns_query        String,
+  threat_tags      Array(String),
+  identity_risk    Float32,
+  device_posture   LowCardinality(String)
+)
+ENGINE = MergeTree()
+PARTITION BY toDate(timestamp)
+ORDER BY (timestamp, src_ip, dst_ip);
+```
+
+---
+
+# 5. 🔧 Ingestion Layer
+
+### Supported ingestion methods
+
+- **Syslog**  
+- **Kafka / Kinesis / PubSub**  
+- **Filebeat / Fluent Bit**  
+- **Custom collectors** for netflow, DNS, TLS metadata  
+
+### Example ingestion flow
+
+1. Sensor → Fluent Bit  
+2. Fluent Bit → Kafka topic `raw_netflow`  
+3. Normalizer consumes → produces `normalized_net_events`  
+4. Enricher consumes → produces `enriched_net_events`  
+5. Router sends to:
+   - ClickHouse (storage)  
+   - ML models  
+   - Threat Hunting Engine  
+   - Lateral Movement Graph Engine  
+
+---
+
+# 6. 🔍 Normalization Layer
+
+### Responsibilities
+
+- Parse raw logs  
+- Convert to unified schema  
+- Standardize field names  
+- Convert timestamps  
+- Deduplicate events  
+
+### Example normalization (pseudo‑TypeScript)
+
+```ts
+function normalizeNetflow(raw) {
+  return {
+    timestamp: raw.start_time,
+    src_ip: raw.src_addr,
+    src_port: raw.src_port,
+    dst_ip: raw.dst_addr,
+    dst_port: raw.dst_port,
+    protocol: raw.protocol,
+    bytes_in: raw.bytes_in,
+    bytes_out: raw.bytes_out
+  };
+}
+```
+
+---
+
+# 7. 🧠 Enrichment Layer
+
+### Enrichment sources
+
+- **Identity layer:** map IP/device → identity  
+- **GeoIP:** country, region  
+- **ASN lookup:** ISP / organization  
+- **Threat intel:** IOC matches, domain reputation  
+- **Device posture:** compliant / non‑compliant  
+- **Risk engine:** identity risk score  
+
+### Example enrichment
+
+```ts
+async function enrich(event) {
+  const identity = await lookupIdentity(event.src_ip);
+  const geo = geoLookup(event.src_ip);
+  const asn = asnLookup(event.src_ip);
+  const ti = threatIntelLookup(event.dst_ip, event.dns_query);
+
+  return {
+    ...event,
+    identity_id: identity?.id || null,
+    device_id: identity?.device_id || null,
+    geo,
+    asn,
+    threat_intel: ti,
+    risk_context: {
+      identity_risk: identity?.risk || 0,
+      device_posture: identity?.device_posture || "unknown"
+    }
+  };
+}
+```
+
+---
+
+# 8. 🚦 Stream Router
+
+Routes enriched events to:
+
+- **Storage** (ClickHouse / Elastic)  
+- **ML models** (APT behavior, anomaly detection)  
+- **Threat Hunting Engine**  
+- **Lateral Movement Graph Engine**  
+- **Fusion Center**  
+
+Routing rules example:
+
+```yaml
+routes:
+  - match: { protocol: "DNS" }
+    to: ["dns_ml_model", "storage"]
+  - match: { tls_fingerprint: "ja3:abcd1234" }
+    to: ["c2_detector", "storage"]
+  - match: { identity_risk: ">0.7" }
+    to: ["identity_compromise_model", "storage"]
+```
+
+---
+
+# 9. 📊 Query & Access Layer
+
+### APIs
+
+- **/query/netflow**  
+- **/query/dns**  
+- **/query/tls**  
+- **/query/identity‑network‑graph**  
+- **/query/anomalies**  
+
+### Example query (SQL)
+
+```sql
+SELECT *
+FROM net_events
+WHERE identity_id = 'user:alice'
+  AND timestamp > now() - INTERVAL 1 DAY
+ORDER BY timestamp DESC;
+```
+
+---
+
+# 10. 🧪 Example Detection Scenarios Enabled by This Pipeline
+
+### Scenario 1 — C2 beaconing  
+Periodic DNS queries + JA3 fingerprint match → APT model triggers.
+
+### Scenario 2 — Lateral movement  
+SMB + RDP + WinRM connections → Movement Graph Engine flags multi‑hop traversal.
+
+### Scenario 3 — Data exfiltration  
+Large outbound transfer to rare ASN → Exfiltration model triggers.
+
+### Scenario 4 — Credential abuse  
+Login from new IP → identity enrichment → Credential Abuse Detector triggers.
+
+---
+
+# 11. 🔗 Integration Points
+
+- **Threat Hunting Engine:** hunts run directly on this data.  
+- **APT Behavior Models:** ML models consume enriched telemetry.  
+- **Lateral Movement Containment:** uses east‑west traffic to detect movement.  
+- **Fusion Center:** correlates network signals with physical/influence signals.  
+- **Identity Layer:** risk scores influence enrichment and routing.  
