@@ -1,0 +1,35 @@
+Here is a comprehensive glossary of terms defining foreign political interference, sourced from official intelligence agencies, national security departments, and cybersecurity watchdogs.
+## Core Strategic Frameworks
+
+* Foreign Malign Influence (FMI): Subversive, undeclared, coercive, or criminal activities executed by foreign governments, non-state actors, or proxies to alter a target nation’s popular or political attitudes, perceptions, or behaviors. Unlike transparent, legal diplomacy, it relies on deception to undermine democratic institutions. Verified by the [FBI (Federal Bureau of Investigation)](https://www.fbi.gov/file-repository/reports-and-publications/foreign-malign-influence-and-higher-education-101824.pdf). [1, 2, 3, 4, 5] 
+* Foreign Information Manipulation and Interference (FIMI): A coordinated pattern of mostly non-illegal behaviors that intentionally threatens or negatively impacts values, procedures, and political processes. This framework shifts focus away from the "truthfulness" of a statement to the deceptive and manipulative mechanics used to amplify it. Cataloged by the [EU Agency for Cybersecurity (ENISA)](https://www.enisa.europa.eu/publications/foreign-information-manipulation-interference-fimi-and-cybersecurity-threat-landscape). [2, 6] 
+* Foreign Electoral Intervention (FEI): Targeted external efforts explicitly designed to influence the outcome of another nation's elections. Methods include backing a specific candidate, running digital smear campaigns against opponents, or escalating polarization to affect how citizens vote without resorting to military force. Outlined by [Wikipedia's Foreign Electoral Intervention Index](https://en.wikipedia.org/wiki/Foreign_electoral_intervention). [7] 
+
+## Information Operations & Weaponized Media
+
+* Disinformation: False or inaccurate information that is intentionally created and distributed with the malicious objective of deceiving the public, causing harm, or swaying political opinions. Detailed by [CISA (Cybersecurity and Infrastructure Security Agency)](https://www.cisa.gov/sites/default/files/publications/19_0717_cisa_foreign-influence-taxonomy.pdf) and [EBSCO Information Services](https://about.ebsco.com/sites/default/files/acquiadam-assets/Points-of-View-Reference-Center-Election-Interference-Overview.pdf). [8, 9, 10] 
+* Misinformation: False, inaccurate, or deceptive information that is shared without harmful intent or the realization that it is incorrect. Recognized by EBSCO Information Services and [CSIS (Center for Strategic and International Studies)](https://www.csis.org/analysis/foreign-malign-influence-targeting-us-and-allied-corporations). [9, 10] 
+* Malinformation: Information based on objective facts but deliberately altered, taken completely out of context, or weaponized with the explicit intent to mislead, manipulate public opinion, or inflict harm. Defined by the CSIS (Center for Strategic and International Studies). [10] 
+* Troll Farm: Coordinated organizations of paid operators who utilize fake digital accounts to uniformly spread propaganda, engineer artificial engagement, generate online conflict, and distort political discourse. Tracked by EBSCO Information Services. [9] 
+* Deepfake: Highly convincing digital audio, video, or imagery generated or altered using artificial intelligence to depict individuals saying or doing things they never actually did. Reviewed by EBSCO Information Services. [9] 
+
+## Coercive Tactics & Cyber Operations
+
+* Economic Coercion: The strategic deployment of trade restrictions, embargoes, investment blocks, or boycotts by a foreign government to punish a country or force its lawmakers into choosing favorable political policies. Noted by CISA and Wikipedia.
+* Advanced Persistent Threat (APT): Highly sophisticated, long-term cyber espionage campaigns—typically state-sponsored—designed to infiltrate networks silently to steal classified political data, compromise campaign infrastructure, or extract intellectual property. Monitored by [ENISA](https://www.enisa.europa.eu/media/media-press-kits/enisa-glossary).
+* Diaspora Coercion: Transnational repression where a foreign country monitors, intimidates, or threatens members of its immigrant communities living abroad to suppress political dissent or force compliance within the host country. Evaluated by [Public Safety Canada](https://www.publicsafety.gc.ca/cnt/ntnl-scrt/frgn-ntrfrnc/ndrstndng-frgn-ntrfrnc-en.aspx?wbdisable=true). [7, 8, 11, 12] 
+
+Would you like to explore specific defensive frameworks used to counter these threats, or should we examine case studies of how these tactics have played out in historical elections?
+
+[1] [https://www.fbi.gov](https://www.fbi.gov/file-repository/reports-and-publications/foreign-malign-influence-and-higher-education-101824.pdf)
+[2] [https://wesleywark.substack.com](https://wesleywark.substack.com/p/what-is-foreign-interference-anyway)
+[3] [https://uscode.house.gov](https://uscode.house.gov/view.xhtml?req=%28title:50%20section:3059%20edition:prelim%29)
+[4] [https://www.dni.gov](https://www.dni.gov/files/FMIC/documents/products/04-25-24_Report_FMI-Primer-Public-Release.pdf)
+[5] [https://www.dni.gov](https://www.dni.gov/files/FMIC/documents/products/10-18-24_Report_FMI-Primer-Vol-2-Public-Release.pdf)
+[6] [https://www.enisa.europa.eu](https://www.enisa.europa.eu/publications/foreign-information-manipulation-interference-fimi-and-cybersecurity-threat-landscape)
+[7] [https://en.wikipedia.org](https://en.wikipedia.org/wiki/Foreign_electoral_intervention)
+[8] [https://www.cisa.gov](https://www.cisa.gov/sites/default/files/publications/19_0717_cisa_foreign-influence-taxonomy.pdf)
+[9] [https://about.ebsco.com](https://about.ebsco.com/sites/default/files/acquiadam-assets/Points-of-View-Reference-Center-Election-Interference-Overview.pdf)
+[10] [https://www.csis.org](https://www.csis.org/analysis/foreign-malign-influence-targeting-us-and-allied-corporations)
+[11] [https://www.enisa.europa.eu](https://www.enisa.europa.eu/media/media-press-kits/enisa-glossary)
+[12] [https://www.publicsafety.gc.ca](https://www.publicsafety.gc.ca/cnt/ntnl-scrt/frgn-ntrfrnc/ndrstndng-frgn-ntrfrnc-en.aspx?wbdisable=true)
