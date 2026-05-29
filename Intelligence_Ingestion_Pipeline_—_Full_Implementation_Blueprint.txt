@@ -1,0 +1,172 @@
+
+# 🧠 **Intelligence Ingestion Pipeline — Full Implementation Blueprint**
+
+This subsystem ingests **all intelligence sources**, including:
+
+- Cyber telemetry  
+- Physical security logs  
+- HUMINT indicators  
+- Influence & information‑ops signals  
+- Supply chain intelligence  
+- Geopolitical & OSINT feeds  
+
+It ensures everything is **normalized, enriched, validated, timestamp‑aligned, and ready for correlation**.
+
+---
+
+# 1. **System Architecture Overview**
+
+### Core Components
+- **Source Connectors Layer** — adapters for every intelligence source  
+- **Raw Telemetry Buffer** — high‑throughput ingestion queue  
+- **Normalization Engine** — converts all inputs into unified schemas  
+- **Enrichment Engine** — identity, asset, facility, geopolitical context  
+- **Validation & Deduplication Engine** — ensures clean, trustworthy data  
+- **Time‑Series & Graph Storage Layer** — optimized for correlation  
+- **Distribution Layer** — routes enriched intel to downstream systems  
+
+---
+
+# 2. **Source Connectors Layer**
+
+### Supported Input Types
+- **Cyber:** SIEM, EDR, NDR, cloud logs, identity logs  
+- **Physical:** badge systems, camera analytics, visitor logs  
+- **HUMINT:** analyst notes, interviews, field reports  
+- **Influence:** social media APIs, narrative detectors, botnet monitors  
+- **Supply Chain:** vendor risk feeds, SBOM scanners, hardware integrity tools  
+- **Geopolitical:** diplomatic activity feeds, OSINT scrapers, travel intel  
+
+### Connector Features
+- Rate‑limiting  
+- Retry logic  
+- Schema validation  
+- Secure transport (mTLS, OIDC, hardware‑backed keys)  
+
+---
+
+# 3. **Raw Telemetry Buffer**
+
+A high‑throughput, fault‑tolerant ingestion layer built on:
+
+- **Kafka** (primary)  
+- **Kinesis / Pulsar** (optional alternatives)  
+
+### Responsibilities
+- Burst absorption  
+- Back‑pressure management  
+- Topic partitioning by vector type  
+- Guaranteed ordering within partitions  
+
+---
+
+# 4. **Normalization Engine**
+
+Every incoming record is transformed into a **Unified Intelligence Object (UIO)**:
+
+```
+{
+  source_id,
+  timestamp,
+  vector_type,
+  identity_context,
+  asset_context,
+  facility_context,
+  indicators,
+  severity,
+  raw_payload
+}
+```
+
+### Normalization Tasks
+- Field mapping  
+- Timestamp correction  
+- Identity resolution  
+- Severity harmonization  
+- Indicator extraction (IOCs, behaviors, anomalies)  
+
+---
+
+# 5. **Enrichment Engine**
+
+### Enrichment Sources
+- Identity directory (AD/OIDC)  
+- Asset inventory  
+- Facility maps  
+- Threat intelligence feeds  
+- Geopolitical databases  
+- Vendor risk databases  
+
+### Enrichment Outputs
+- Identity role & privilege context  
+- Device & asset metadata  
+- Facility & geolocation context  
+- Threat actor associations  
+- Known vulnerabilities  
+- Peer‑group baselines  
+
+---
+
+# 6. **Validation & Deduplication Engine**
+
+### Validation Rules
+- Required fields present  
+- Timestamps within acceptable drift  
+- Identity matches known directory entries  
+- Indicators conform to expected formats  
+
+### Deduplication Logic
+- Hash‑based duplicate detection  
+- Temporal proximity checks  
+- Cross‑source duplicate suppression  
+
+---
+
+# 7. **Storage Layer**
+
+### A. Time‑Series Storage
+- ClickHouse  
+- TimescaleDB  
+- Elastic (optional)  
+
+Stores:
+- Telemetry  
+- Enriched events  
+- Behavioral features  
+
+### B. Graph Storage
+- Neo4j  
+- TigerGraph  
+
+Stores:
+- Identity graphs  
+- Event graphs  
+- Actor graphs  
+- Infrastructure graphs  
+
+---
+
+# 8. **Distribution Layer**
+
+### Downstream Consumers
+- **Cross‑Vector Correlation Engine**  
+- **Unified Threat Dashboard**  
+- **Leadership Briefing Generator**  
+- **Hybrid Threat IR Platform**  
+
+### Delivery Modes
+- Real‑time streaming  
+- Batch windows  
+- Event‑triggered pushes  
+
+---
+
+# 9. **Governance & Oversight**
+
+### Controls
+- Full audit logging  
+- Data lineage tracking  
+- Chain‑of‑custody for intelligence  
+- Privacy‑preserving transformations  
+- Role‑based access control  
+- Compliance tagging (CUI, PII, etc.)  
