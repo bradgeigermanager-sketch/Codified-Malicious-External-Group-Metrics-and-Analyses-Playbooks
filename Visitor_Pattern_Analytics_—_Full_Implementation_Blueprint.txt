@@ -1,0 +1,283 @@
+
+# 🧭 **Visitor Pattern Analytics — Full Implementation Blueprint**
+
+This subsystem analyzes **visitor behavior**, **movement patterns**, and **anomalous presence** inside facilities.  
+It is essential for detecting:
+
+- foreign intelligence collectors  
+- reconnaissance behavior  
+- insider recruitment attempts  
+- anomalous dwell times  
+- repeated visits to sensitive zones  
+- coordinated multi‑visitor patterns  
+
+It integrates with the physical access system, identity layer, and fusion center.
+
+---
+
+# 1. 🎯 Purpose & Scope
+
+The Visitor Pattern Analytics (VPA) system must:
+
+- Track **visitor entries, exits, and zone movements**  
+- Build **behavioral baselines** for normal visitor activity  
+- Detect **anomalous or suspicious visitor patterns**  
+- Correlate visitor behavior with **cyber events**, **identity risk**, and **external intelligence indicators**  
+- Provide **real‑time alerts** and **investigation tools**  
+
+---
+
+# 2. 🧩 High‑Level Architecture
+
+### Core components
+
+- **Visitor Registry Service (VRS)**  
+  Stores visitor identities, affiliations, visit purpose, escort requirements.
+
+- **Visitor Event Ingestor**  
+  Consumes badge scans, sign‑in logs, escort logs, and zone transitions.
+
+- **Behavioral Baseline Engine**  
+  Learns typical visitor patterns by category (vendor, contractor, diplomat, etc.).
+
+- **Anomaly Detection Engine**  
+  Flags deviations from expected behavior.
+
+- **Multi‑Visitor Correlator**  
+  Detects coordinated visits or pattern overlaps.
+
+- **Physical‑Cyber Fusion Layer**  
+  Links visitor presence with cyber anomalies.
+
+- **Alert & Case Engine**  
+  Generates alerts and escalates to physical security or IR.
+
+---
+
+# 3. 🪪 Visitor Registry Service (VRS)
+
+### 3.1 Visitor profile model
+
+```json
+{
+  "visitor_id": "vis-9832",
+  "name": "John Doe",
+  "organization": "GlobalTech Consulting",
+  "country": "DE",
+  "category": "contractor",
+  "escort_required": true,
+  "risk_flags": ["foreign_national", "unknown_affiliation"],
+  "created_at": "2026-05-28T21:46:00Z"
+}
+```
+
+### 3.2 Storage schema
+
+```sql
+CREATE TABLE visitors (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  organization TEXT,
+  country TEXT,
+  category TEXT,
+  escort_required BOOLEAN,
+  risk_flags TEXT[],
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+---
+
+# 4. 🚪 Visitor Event Ingestor
+
+### Event types
+
+- **Check‑in** (front desk, kiosk)  
+- **Badge issuance**  
+- **Zone entry/exit**  
+- **Escort assignment**  
+- **Escort separation**  
+- **Check‑out**  
+
+### Example event
+
+```json
+{
+  "event_id": "uuid",
+  "timestamp": "2026-05-28T21:47:00Z",
+  "visitor_id": "vis-9832",
+  "event_type": "zone_entry",
+  "zone_id": "zone-lab-3",
+  "escort_id": "user:alice"
+}
+```
+
+---
+
+# 5. 📊 Behavioral Baseline Engine
+
+### Baseline dimensions
+
+- **Visit frequency**  
+- **Typical zones visited**  
+- **Dwell time per zone**  
+- **Escort compliance**  
+- **Movement speed**  
+- **Visit purpose patterns**  
+- **Visitor category norms** (vendors vs diplomats vs contractors)
+
+### Example baseline profile
+
+```json
+{
+  "visitor_id": "vis-9832",
+  "avg_visit_duration_minutes": 42,
+  "common_zones": ["zone-lobby", "zone-meeting-2"],
+  "avg_dwell_time": { "zone-meeting-2": 30 },
+  "escort_compliance_rate": 0.98
+}
+```
+
+---
+
+# 6. 🔍 Anomaly Detection Engine
+
+### Anomaly types
+
+- **Zone anomaly**  
+  Visitor enters a zone outside their baseline or category norms.
+
+- **Dwell anomaly**  
+  Visitor stays too long in a sensitive area.
+
+- **Escort anomaly**  
+  Escort required → visitor moves unescorted.
+
+- **Frequency anomaly**  
+  Visitor returns more often than expected.
+
+- **Route anomaly**  
+  Unusual movement path (e.g., lobby → server room).
+
+- **Group anomaly**  
+  Multiple visitors from same org appear simultaneously.
+
+### Example anomaly rule (YAML)
+
+```yaml
+id: "visitor_sensitive_zone_unexpected"
+condition: >
+  zone.sensitivity == "critical" AND
+  visitor.category NOT IN ["researcher","executive"] AND
+  visitor.risk_flags CONTAINS "foreign_national"
+severity: "high"
+action: "alert"
+```
+
+---
+
+# 7. 👥 Multi‑Visitor Correlator
+
+### Detects:
+
+- **Coordinated visits**  
+  Multiple visitors from same foreign org entering different buildings simultaneously.
+
+- **Pattern overlap**  
+  Visitors from different orgs repeatedly appearing in same zones.
+
+- **Reconnaissance patterns**  
+  Visitors mapping building layout over multiple visits.
+
+### Example correlation output
+
+```json
+{
+  "correlation_id": "corr-123",
+  "visitors": ["vis-9832", "vis-4411"],
+  "pattern": "coordinated_multi_zone_entry",
+  "zones": ["zone-lab-3", "zone-admin-1"],
+  "timestamp": "2026-05-28T21:48:00Z"
+}
+```
+
+---
+
+# 8. 🔗 Physical‑Cyber Fusion Layer
+
+This is where visitor behavior intersects with cyber activity.
+
+### Correlation examples
+
+- Visitor enters sensitive lab → network beaconing begins from that lab’s subnet.  
+- Visitor meets with employee → employee’s identity risk spikes.  
+- Visitor from foreign org → targeted spear‑phishing campaign appears same week.  
+
+### Fusion rule example
+
+```yaml
+id: "visitor_cyber_link"
+condition: >
+  visitor.zone_entry == "zone-lab-3" AND
+  net_events.exists(dst_ip IN lab_subnet AND threat_intel.malicious == true)
+severity: "critical"
+action: "notify_security"
+```
+
+---
+
+# 9. 🚨 Alert & Case Engine
+
+### Alert schema
+
+```json
+{
+  "alert_type": "visitor_anomaly",
+  "visitor_id": "vis-9832",
+  "anomaly_type": "dwell_time_exceeded",
+  "zone_id": "zone-lab-3",
+  "severity": "high",
+  "details": { "dwell_minutes": 92 },
+  "timestamp": "2026-05-28T21:49:00Z"
+}
+```
+
+### Possible actions
+
+- Notify physical security  
+- Require escort to retrieve visitor  
+- Lock sensitive zones  
+- Increase identity risk for associated employees  
+- Trigger camera review  
+
+---
+
+# 10. 🖥️ Analyst Workbench (Visitor Intelligence)
+
+Capabilities:
+
+- Visitor timelines  
+- Zone heatmaps  
+- Dwell‑time analytics  
+- Escort compliance dashboard  
+- Multi‑visitor correlation graphs  
+- Exportable incident packages  
+
+---
+
+# 11. 🔗 Integration Points
+
+- **Access Zoning & Badge Intelligence**  
+  Provides zone definitions and badge events.
+
+- **Identity Layer**  
+  Links visitors to employees (escorts, contacts).
+
+- **Threat Hunting Engine**  
+  Visitor anomalies seed cyber hunts.
+
+- **Fusion Center**  
+  Correlates visitor behavior with cyber, HUMINT, and influence signals.
+
+- **Counter‑Surveillance Detection**  
+  Next subsystem in the chain.
