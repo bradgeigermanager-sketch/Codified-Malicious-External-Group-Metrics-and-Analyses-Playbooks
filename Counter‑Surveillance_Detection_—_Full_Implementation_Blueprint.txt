@@ -1,0 +1,238 @@
+
+# 🕵️ **Counter‑Surveillance Detection — Full Implementation Blueprint**
+
+
+
+
+
+This subsystem detects **hostile reconnaissance**, **pre‑attack casing**, and **foreign‑aligned surveillance behaviors** around facilities, personnel, and sensitive zones.  
+It fuses **physical**, **cyber**, **visitor**, and **environmental** signals to identify patterns consistent with:
+
+- hostile intelligence collection  
+- pre‑operational surveillance  
+- dry runs  
+- pattern‑of‑life mapping  
+- insider targeting  
+- coordinated multi‑actor reconnaissance  
+
+This is the defensive system that spots the threat **before** the attack.
+
+---
+
+# 1. 🎯 Purpose & Scope
+
+The **Counter‑Surveillance Detection** subsystem must:
+
+- Detect **repeated presence** near sensitive areas  
+- Identify **suspicious observation behavior**  
+- Correlate **visitor + badge + camera metadata**  
+- Detect **pattern‑of‑life mapping**  
+- Identify **multi‑actor coordinated surveillance**  
+- Fuse with cyber signals (e.g., scanning from nearby Wi‑Fi)  
+- Trigger alerts and protective actions  
+
+---
+
+# 2. 🧩 High‑Level Architecture
+
+### Core components
+
+- **Surveillance Signal Ingestor**  
+  Ingests physical sensor metadata (NOT video), badge events, visitor logs, Wi‑Fi probes.
+
+- **Behavioral Baseline Engine**  
+  Learns normal patterns of presence and movement around sensitive zones.
+
+- **Recon Pattern Detector**  
+  Identifies casing, observation, and mapping behaviors.
+
+- **Multi‑Actor Correlator**  
+  Detects coordinated surveillance by multiple individuals.
+
+- **Physical‑Cyber Fusion Layer**  
+  Links physical reconnaissance with cyber probing.
+
+- **Alert & Response Engine**  
+  Notifies security, restricts access, or triggers protective posture.
+
+---
+
+# 3. 📡 Surveillance Signal Ingestor
+
+### Inputs (metadata only)
+
+- **Camera metadata:**  
+  - body count  
+  - dwell time  
+  - direction of movement  
+  - object classification (person/vehicle)  
+  - no images, no video  
+
+- **Badge events**  
+- **Visitor logs**  
+- **Wi‑Fi probe requests** (MAC‑hashed)  
+- **Bluetooth beacon proximity**  
+- **Door sensor events**  
+- **Motion sensors**  
+
+### Example ingested event
+
+```json
+{
+  "event_id": "uuid",
+  "timestamp": "2026-05-28T21:52:00Z",
+  "sensor_type": "camera_meta",
+  "zone_id": "zone-exterior-north",
+  "body_count": 1,
+  "dwell_seconds": 180,
+  "movement_pattern": "stationary",
+  "device_id": null
+}
+```
+
+---
+
+# 4. 🧠 Behavioral Baseline Engine
+
+### Baseline dimensions
+
+- Normal dwell time per zone  
+- Normal movement patterns  
+- Typical visitor/employee presence  
+- Expected traffic by time of day  
+- Expected exterior foot traffic  
+- Normal Wi‑Fi probe density  
+
+### Example baseline profile
+
+```json
+{
+  "zone_id": "zone-exterior-north",
+  "avg_dwell_seconds": 22,
+  "peak_hours": ["08:00-09:00", "17:00-18:00"],
+  "expected_body_count": 3,
+  "normal_probe_density": 12
+}
+```
+
+---
+
+# 5. 🔍 Recon Pattern Detector
+
+### Detects:
+
+- **Extended dwell time** near sensitive areas  
+- **Repeated visits** by same individual/device  
+- **Back‑and‑forth pacing**  
+- **Observation behavior** (stationary facing sensitive zone)  
+- **Mapping behavior** (walking perimeter repeatedly)  
+- **Entry‑attempt patterns** (approaching multiple doors)  
+- **Wi‑Fi reconnaissance** (probe bursts, rogue APs)  
+
+### Example detection rule (YAML)
+
+```yaml
+id: "extended_dwell_sensitive_zone"
+condition: >
+  zone.sensitivity == "critical" AND
+  dwell_seconds > (baseline.avg_dwell_seconds * 5)
+severity: "high"
+action: "alert"
+```
+
+---
+
+# 6. 👥 Multi‑Actor Correlator
+
+### Detects:
+
+- **Two or more individuals** appearing in same zones at coordinated times  
+- **Surveillance handoff patterns**  
+- **Reconnaissance triangulation** (multiple vantage points)  
+- **Repeated visits by different individuals from same org/country**  
+- **Vehicle + pedestrian coordination**  
+
+### Example correlation output
+
+```json
+{
+  "correlation_id": "corr-552",
+  "actors": ["unknown_person_1", "unknown_person_2"],
+  "pattern": "multi_actor_perimeter_sweep",
+  "zones": ["zone-exterior-north", "zone-exterior-east"],
+  "timestamp": "2026-05-28T21:53:00Z"
+}
+```
+
+---
+
+# 7. 🔗 Physical‑Cyber Fusion Layer
+
+This is where the system becomes extremely powerful.
+
+### Correlation examples
+
+- Physical recon near building → cyber scanning from nearby Wi‑Fi.  
+- Visitor meets employee → employee’s account begins probing internal systems.  
+- Unknown individual near server room → anomalous badge attempts occur.  
+- Vehicle parked repeatedly near facility → C2 beaconing from nearby subnet.  
+
+### Fusion rule example
+
+```yaml
+id: "physical_cyber_recon_link"
+condition: >
+  physical_event.zone == "exterior-sensitive" AND
+  net_events.exists(src_ip IN nearby_wifi AND event_type == "port_scan")
+severity: "critical"
+action: "notify_security"
+```
+
+---
+
+# 8. 🚨 Alert & Response Engine
+
+### Alert schema
+
+```json
+{
+  "alert_type": "counter_surveillance",
+  "pattern": "extended_dwell",
+  "zone_id": "zone-exterior-north",
+  "severity": "high",
+  "details": { "dwell_seconds": 180 },
+  "timestamp": "2026-05-28T21:54:00Z"
+}
+```
+
+### Possible actions
+
+- Notify physical security  
+- Dispatch patrol  
+- Lock exterior access points  
+- Increase identity risk for associated employees  
+- Trigger camera review  
+- Restrict visitor movement  
+
+---
+
+# 9. 🖥️ Analyst Workbench (Counter‑Surveillance)
+
+Capabilities:
+
+- Zone heatmaps  
+- Dwell‑time anomaly visualization  
+- Multi‑actor correlation graphs  
+- Recon timeline playback  
+- Wi‑Fi probe density maps  
+- Exportable incident packages  
+
+---
+
+# 10. 🔗 Integration Points
+
+- **Access Zoning & Badge Intelligence**  
+- **Visitor Pattern Analytics**  
+- **Network Telemetry Pipeline**  
+- **APT Behavior Detection Models**  
+- **Fusion Center** (cross‑vector correlation)  
