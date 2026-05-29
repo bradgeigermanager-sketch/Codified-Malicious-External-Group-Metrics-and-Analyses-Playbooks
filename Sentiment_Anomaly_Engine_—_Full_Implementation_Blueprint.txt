@@ -1,0 +1,255 @@
+
+# 🧠 **Sentiment Anomaly Engine — Full Implementation Blueprint**
+
+
+
+
+
+This subsystem detects **abnormal emotional shifts**, **manipulated sentiment waves**, and **coordinated psychological influence patterns** across digital platforms.  
+It is the emotional‑signal counterpart to the **Cross‑Platform Disinfo Correlator** and a core pillar of the information‑operations defense stack.
+
+It identifies:
+
+- sudden sentiment swings  
+- coordinated emotional amplification  
+- sentiment‑based manipulation campaigns  
+- foreign‑aligned outrage cycles  
+- narrative‑linked emotional spikes  
+- sentiment anomalies tied to cyber or physical events  
+
+---
+
+# 1. 🎯 Purpose & Scope
+
+The **Sentiment Anomaly Engine** must:
+
+- Ingest text from multiple platforms  
+- Compute sentiment, emotion, and intensity  
+- Build baselines for topics, communities, and platforms  
+- Detect abnormal sentiment spikes or drops  
+- Correlate sentiment anomalies with disinfo, botnets, or real‑world events  
+- Feed alerts into the fusion center  
+
+---
+
+# 2. 🧩 High‑Level Architecture
+
+### Core components
+
+- **Sentiment Ingestor**  
+  Pulls normalized posts/messages from the disinfo pipeline.
+
+- **Sentiment & Emotion Classifier**  
+  Computes polarity, emotion class, and intensity.
+
+- **Baseline Engine**  
+  Learns normal sentiment patterns per topic/platform.
+
+- **Anomaly Detector**  
+  Flags deviations from expected sentiment.
+
+- **Narrative‑Sentiment Correlator**  
+  Links sentiment anomalies to narrative clusters.
+
+- **Alert Engine**  
+  Generates alerts for influence‑operation indicators.
+
+---
+
+# 3. 📥 Sentiment Ingestor
+
+### Inputs
+
+- normalized posts from the **Disinfo Correlator**  
+- news headlines  
+- public comments  
+- forum threads  
+- RSS feeds  
+- messaging app metadata (public channels only)
+
+### Example ingested record
+
+```json
+{
+  "post_id": "tw-5511",
+  "platform": "twitter",
+  "timestamp": "2026-05-28T21:58:00Z",
+  "text": "This is outrageous. They’re hiding the truth again.",
+  "topic": "government",
+  "language": "en"
+}
+```
+
+---
+
+# 4. 🧠 Sentiment & Emotion Classifier
+
+### Outputs
+
+- **polarity:** positive / neutral / negative  
+- **emotion:** anger, fear, joy, disgust, sadness, surprise  
+- **intensity:** 0–1  
+- **stance:** pro / anti / neutral  
+- **toxicity score**  
+- **manipulation likelihood** (optional ML model)
+
+### Example output
+
+```json
+{
+  "polarity": "negative",
+  "emotion": "anger",
+  "intensity": 0.82,
+  "toxicity": 0.44,
+  "stance": "anti"
+}
+```
+
+---
+
+# 5. 📊 Baseline Engine
+
+### Baseline dimensions
+
+- sentiment distribution per topic  
+- sentiment distribution per platform  
+- time‑of‑day sentiment patterns  
+- typical emotional intensity  
+- expected volatility  
+- historical sentiment cycles  
+
+### Example baseline profile
+
+```json
+{
+  "topic": "government",
+  "avg_polarity": -0.21,
+  "avg_intensity": 0.34,
+  "volatility": 0.12,
+  "peak_hours": ["18:00-21:00"]
+}
+```
+
+---
+
+# 6. 🚨 Sentiment Anomaly Detector
+
+### Detects:
+
+- **Sentiment spikes** (anger, fear, outrage)  
+- **Sentiment drops** (apathy, suppression)  
+- **Emotion‑specific anomalies** (fear surge, anger wave)  
+- **Cross‑platform synchronized sentiment shifts**  
+- **Narrative‑linked emotional manipulation**  
+- **Foreign‑aligned sentiment injection**  
+
+### Example anomaly rule (YAML)
+
+```yaml
+id: "anger_spike_government_topic"
+condition: >
+  emotion == "anger" AND
+  intensity > (baseline.avg_intensity * 2.5) AND
+  timestamp within last 30 minutes
+severity: "high"
+action: "alert"
+```
+
+---
+
+# 7. 🔗 Narrative‑Sentiment Correlator
+
+### Purpose  
+Link emotional anomalies to **narrative clusters** from the disinfo system.
+
+### Example correlation output
+
+```json
+{
+  "correlation_id": "corr-991",
+  "narrative": "government corruption leak",
+  "sentiment_spike": "anger",
+  "intensity": 0.91,
+  "platforms": ["twitter", "telegram"],
+  "timestamp": "2026-05-28T21:59:00Z"
+}
+```
+
+### Patterns detected
+
+- narrative → sentiment → amplification  
+- sentiment spike precedes narrative spread  
+- sentiment spike follows botnet activity  
+- sentiment spike localized to specific geo/ASN  
+
+---
+
+# 8. 🤖 ML‑Based Anomaly Detection
+
+### Models used
+
+- **Time‑series forecasting** (Prophet, LSTM)  
+- **Volatility anomaly detection**  
+- **Emotion‑sequence models**  
+- **Cross‑platform synchronization models**  
+- **Sentiment‑topic drift models**  
+
+### Example anomaly score
+
+```json
+{
+  "topic": "elections",
+  "anomaly_score": 0.87,
+  "expected_intensity": 0.22,
+  "observed_intensity": 0.71
+}
+```
+
+---
+
+# 9. 🚨 Alert Engine
+
+### Alert schema
+
+```json
+{
+  "alert_type": "sentiment_anomaly",
+  "emotion": "fear",
+  "topic": "public health",
+  "severity": "high",
+  "intensity": 0.88,
+  "platforms": ["reddit", "telegram"],
+  "timestamp": "2026-05-28T22:00:00Z"
+}
+```
+
+### Possible actions
+
+- Notify comms/security  
+- Trigger rapid‑response messaging  
+- Flag narrative cluster for deeper analysis  
+- Feed into fusion center  
+- Correlate with botnet activity  
+
+---
+
+# 10. 🖥️ Analyst Workbench (Sentiment Intelligence)
+
+Capabilities:
+
+- Sentiment heatmaps  
+- Emotion timelines  
+- Topic‑sentiment drift visualization  
+- Cross‑platform sentiment comparison  
+- Narrative‑sentiment overlays  
+- Exportable intelligence packages  
+
+---
+
+# 11. 🔗 Integration Points
+
+- **Cross‑Platform Disinfo Correlator**  
+- **Botnet Influence Detection**  
+- **Fusion Center**  
+- **Leadership Briefing Generator**  
+- **Threat Hunting Engine** (for hybrid cyber‑info ops)  
