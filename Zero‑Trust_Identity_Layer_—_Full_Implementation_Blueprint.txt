@@ -1,0 +1,471 @@
+---
+
+# Zero‑Trust Identity Layer — Full Implementation Blueprint
+
+## 1. High‑level architecture
+
+**Core services:**
+
+- **Identity Directory Service (IDS):**  
+  Authoritative store for `User`, `ServiceAccount`, `Device`, `Group`, `Role`.
+- **Authentication Service (AuthN):**  
+  Handles login, MFA, WebAuthn, token issuance.
+- **Policy Decision Point (PDP):**  
+  Central authorization engine (`allow/deny` + obligations).
+- **Policy Enforcement Points (PEPs):**  
+  Libraries/sidecars/gateway plugins that call PDP.
+- **Risk & Context Engine (RCE):**  
+  Computes risk scores per session/request.
+- **Identity Lifecycle Manager (ILM):**  
+  Joiner/mover/leaver automation.
+- **Audit & Telemetry Pipeline (ATP):**  
+  Streams all identity events to storage/SIEM.
+
+**Data stores:**
+
+- **Relational DB (e.g., Postgres):** Identity directory, policies, roles, lifecycle state.
+- **Time‑series / log store (e.g., ClickHouse/Elastic):** AuthN/AuthZ events, risk events.
+- **Cache (e.g., Redis):** Session state, token blacklists, policy cache.
+
+---
+
+## 2. Data model (relational core)
+
+### 2.1 Tables
+
+```sql
+CREATE TABLE identities (
+  id              UUID PRIMARY KEY,
+  type            TEXT NOT NULL CHECK (type IN ('user', 'service', 'device')),
+  external_id     TEXT UNIQUE,
+  display_name    TEXT NOT NULL,
+  email           TEXT UNIQUE,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  status          TEXT NOT NULL CHECK (status IN ('active', 'disabled', 'pending', 'terminated'))
+);
+
+CREATE TABLE groups (
+  id          UUID PRIMARY KEY,
+  name        TEXT UNIQUE NOT NULL,
+  description TEXT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE identity_group_membership (
+  identity_id UUID NOT NULL REFERENCES identities(id) ON DELETE CASCADE,
+  group_id    UUID NOT NULL REFERENCES groups(id) ON DELETE CASCADE,
+  PRIMARY KEY (identity_id, group_id)
+);
+
+CREATE TABLE roles (
+  id          UUID PRIMARY KEY,
+  name        TEXT UNIQUE NOT NULL,
+  description TEXT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE identity_role_assignments (
+  identity_id UUID NOT NULL REFERENCES identities(id) ON DELETE CASCADE,
+  role_id     UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+  source      TEXT NOT NULL, -- 'hr', 'admin', 'system'
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (identity_id, role_id)
+);
+
+CREATE TABLE devices (
+  id              UUID PRIMARY KEY,
+  identity_id     UUID REFERENCES identities(id),
+  platform        TEXT,
+  os_version      TEXT,
+  posture_status  TEXT, -- 'compliant', 'non_compliant', 'unknown'
+  last_seen_at    TIMESTAMPTZ,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE policies (
+  id          UUID PRIMARY KEY,
+  name        TEXT UNIQUE NOT NULL,
+  version     INT NOT NULL,
+  is_active   BOOLEAN NOT NULL DEFAULT true,
+  language    TEXT NOT NULL, -- 'rego', 'cedar', 'dsl'
+  definition  JSONB NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE auth_events (
+  id              UUID PRIMARY KEY,
+  identity_id     UUID,
+  event_type      TEXT NOT NULL, -- 'login_success', 'login_failure', 'mfa_challenge', ...
+  ip_address      INET,
+  user_agent      TEXT,
+  geo             TEXT,
+  device_id       UUID,
+  risk_score      NUMERIC(5,2),
+  metadata        JSONB,
+  occurred_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE authz_decisions (
+  id              UUID PRIMARY KEY,
+  identity_id     UUID,
+  resource        TEXT NOT NULL,
+  action          TEXT NOT NULL,
+  decision        TEXT NOT NULL CHECK (decision IN ('allow', 'deny')),
+  policy_id       UUID,
+  policy_version  INT,
+  risk_score      NUMERIC(5,2),
+  context         JSONB,
+  occurred_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+```
+
+---
+
+## 3. Authentication service (API + flows)
+
+### 3.1 Core endpoints (REST-ish)
+
+- **POST `/auth/login`**  
+  **Input:** `username`, `password`  
+  **Output:** either `mfa_required` or `tokens` (access + refresh)  
+- **POST `/auth/mfa/challenge`**  
+  **Input:** `session_id`, `mfa_code` or WebAuthn assertion  
+  **Output:** `tokens`  
+- **POST `/auth/token/refresh`**  
+  **Input:** `refresh_token`  
+  **Output:** new `access_token` (+ optional new refresh)  
+- **POST `/auth/webauthn/register/start` / `/finish`**  
+  WebAuthn registration ceremony.  
+- **GET `/auth/session`**  
+  Returns current session info, risk, device, active tokens.  
+- **POST `/auth/logout`**  
+  Revokes tokens and session.
+
+### 3.2 Token format (JWT example)
+
+```json
+{
+  "iss": "https://idp.example.com",
+  "sub": "b1f0e1b2-1234-4cde-9abc-1234567890ab",
+  "aud": "api://default",
+  "exp": 1735689600,
+  "iat": 1735686000,
+  "jti": "c0ffee-...",
+  "scope": "read:orders write:orders",
+  "roles": ["admin", "analyst"],
+  "amr": ["pwd", "mfa", "webauthn"],
+  "device_id": "d3f1-...",
+  "risk_score": 0.21
+}
+```
+
+---
+
+## 4. Policy Decision Point (PDP)
+
+### 4.1 Evaluation API
+
+**POST `/pdp/evaluate`**
+
+**Request:**
+
+```json
+{
+  "subject": {
+    "id": "b1f0e1b2-1234-4cde-9abc-1234567890ab",
+    "roles": ["analyst"],
+    "groups": ["security_team"],
+    "attributes": {
+      "department": "security",
+      "clearance": "secret"
+    }
+  },
+  "action": "read",
+  "resource": {
+    "type": "report",
+    "id": "incident-2025-01",
+    "attributes": {
+      "classification": "secret",
+      "owner_department": "security"
+    }
+  },
+  "context": {
+    "ip": "203.0.113.10",
+    "geo": "US",
+    "device_posture": "compliant",
+    "risk_score": 0.18,
+    "time": "2025-01-01T12:00:00Z"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "decision": "allow",
+  "policy_id": "8f3c3c2e-...",
+  "policy_version": 3,
+  "obligations": [
+    {
+      "type": "log",
+      "level": "info",
+      "message": "Access to secret incident report by security analyst"
+    }
+  ]
+}
+```
+
+### 4.2 Example policy (simple DSL)
+
+```yaml
+name: "secret_reports_security_only"
+version: 3
+effect: "deny-override"
+
+when:
+  resource.type == "report" &&
+  resource.attributes.classification == "secret"
+
+rules:
+  - id: "allow_security_with_clearance"
+    effect: "allow"
+    condition: >
+      "security" in subject.attributes.department &&
+      subject.attributes.clearance in ["secret", "top_secret"] &&
+      context.risk_score < 0.7
+
+  - id: "deny_high_risk"
+    effect: "deny"
+    condition: >
+      context.risk_score >= 0.7
+```
+
+PDP loads these definitions, compiles them, and evaluates them per request.
+
+---
+
+## 5. Policy Enforcement Points (PEPs)
+
+### 5.1 API gateway middleware (TypeScript example)
+
+```ts
+import express from "express";
+import jwt from "jsonwebtoken";
+import fetch from "node-fetch";
+
+const app = express();
+
+async function pepMiddleware(req, res, next) {
+  try {
+    const authHeader = req.headers["authorization"] || "";
+    const token = authHeader.replace("Bearer ", "");
+    if (!token) return res.status(401).json({ error: "missing_token" });
+
+    const decoded: any = jwt.verify(token, process.env.JWT_PUBLIC_KEY!);
+
+    const subject = {
+      id: decoded.sub,
+      roles: decoded.roles || [],
+      attributes: decoded.attributes || {}
+    };
+
+    const resource = {
+      type: "api",
+      id: req.path,
+      attributes: {
+        method: req.method
+      }
+    };
+
+    const context = {
+      ip: req.ip,
+      geo: req.headers["x-geo"] || "unknown",
+      device_posture: decoded.device_posture || "unknown",
+      risk_score: decoded.risk_score || 0.0,
+      time: new Date().toISOString()
+    };
+
+    const pdpResp = await fetch(process.env.PDP_URL + "/pdp/evaluate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subject, action: req.method, resource, context })
+    }).then(r => r.json());
+
+    if (pdpResp.decision !== "allow") {
+      return res.status(403).json({ error: "access_denied" });
+    }
+
+    // Optionally log obligations, etc.
+    (req as any).identity = decoded;
+    next();
+  } catch (err) {
+    console.error("PEP error", err);
+    return res.status(401).json({ error: "invalid_token" });
+  }
+}
+
+app.use(pepMiddleware);
+```
+
+---
+
+## 6. Risk & Context Engine (RCE)
+
+### 6.1 Inputs
+
+- Device posture (from MDM/EDR)
+- IP reputation
+- Geo & velocity (impossible travel)
+- Time of day
+- Historical behavior (failed logins, unusual resources)
+- Threat intel (known bad IPs, campaigns)
+
+### 6.2 Risk scoring function (conceptual)
+
+```ts
+interface RiskContext {
+  devicePosture: "compliant" | "non_compliant" | "unknown";
+  ipReputation: number; // 0–1
+  geoChange: boolean;
+  failedLoginsLast24h: number;
+  sensitiveResource: boolean;
+}
+
+export function computeRisk(ctx: RiskContext): number {
+  let score = 0;
+
+  if (ctx.devicePosture === "non_compliant") score += 0.4;
+  if (ctx.devicePosture === "unknown") score += 0.1;
+
+  score += ctx.ipReputation * 0.3;
+
+  if (ctx.geoChange) score += 0.2;
+
+  if (ctx.failedLoginsLast24h > 5) score += 0.2;
+
+  if (ctx.sensitiveResource) score += 0.2;
+
+  return Math.min(1, score);
+}
+```
+
+RCE exposes an API like `POST /risk/evaluate` and is called by AuthN and PDP.
+
+---
+
+## 7. Identity Lifecycle Manager (ILM)
+
+### 7.1 Workflows
+
+- **Joiner:**
+  - Trigger: new hire in HR system.
+  - Actions:
+    - Create `identities` record.
+    - Assign baseline groups/roles based on department, location, level.
+    - Issue initial credentials / invite.
+- **Mover:**
+  - Trigger: department/role change.
+  - Actions:
+    - Remove old role assignments.
+    - Add new roles/groups.
+    - Recompute least‑privilege baseline.
+- **Leaver:**
+  - Trigger: termination in HR.
+  - Actions:
+    - Disable identity.
+    - Revoke tokens and sessions.
+    - Remove from groups/roles.
+    - Log deprovision event.
+
+### 7.2 Example ILM event handler (pseudo‑TypeScript)
+
+```ts
+type HRChangeEvent =
+  | { type: "hire"; externalId: string; name: string; email: string; department: string; role: string; }
+  | { type: "move"; externalId: string; department: string; role: string; }
+  | { type: "terminate"; externalId: string; };
+
+async function handleHrEvent(evt: HRChangeEvent) {
+  switch (evt.type) {
+    case "hire":
+      // create identity, assign baseline roles
+      break;
+    case "move":
+      // adjust roles/groups
+      break;
+    case "terminate":
+      // disable identity, revoke tokens
+      break;
+  }
+}
+```
+
+---
+
+## 8. Audit & Telemetry Pipeline
+
+### 8.1 Event schema (logical)
+
+- **AuthN events:**
+  - `event_type`, `identity_id`, `ip`, `geo`, `device_id`, `risk_score`, `success`, `failure_reason`.
+- **AuthZ decisions:**
+  - `identity_id`, `resource`, `action`, `decision`, `policy_id`, `risk_score`, `context`.
+
+### 8.2 Example log event (JSON)
+
+```json
+{
+  "event_type": "authz_decision",
+  "identity_id": "b1f0e1b2-1234-4cde-9abc-1234567890ab",
+  "resource": "/admin/incidents",
+  "action": "GET",
+  "decision": "deny",
+  "policy_id": "secret_reports_security_only",
+  "policy_version": 3,
+  "risk_score": 0.82,
+  "context": {
+    "ip": "198.51.100.23",
+    "geo": "RU",
+    "device_posture": "unknown"
+  },
+  "occurred_at": "2025-01-01T12:34:56Z"
+}
+```
+
+These events are shipped via a log agent (e.g., Fluent Bit) into your SIEM or data lake.
+
+---
+
+## 9. Admin & Self‑Service Portals (functional spec)
+
+- **Admin portal:**
+  - View/edit identities, groups, roles.
+  - Manage policies (create, test, publish, rollback).
+  - View risk dashboards and anomaly reports.
+  - Run access reviews and export reports.
+
+- **User portal:**
+  - View active sessions and revoke them.
+  - Manage MFA devices and WebAuthn keys.
+  - Request additional access (with approval workflows).
+  - View login history (for self‑detection of anomalies).
+
+---
+
+## 10. Deployment & hardening notes
+
+- **Separate trust zones:**  
+  PDP, AuthN, and IDS should live in a hardened security zone with strict network controls.
+- **Key management:**  
+  Use HSM/KMS for signing keys, rotate regularly, enforce strict access.
+- **Config & policy changes:**  
+  All changes go through code review, CI/CD, and are versioned.
+- **Monitoring:**  
+  Alert on:
+  - spikes in failed logins  
+  - unusual geo access  
+  - high‑risk decisions being allowed  
+  - policy changes outside maintenance windows  
