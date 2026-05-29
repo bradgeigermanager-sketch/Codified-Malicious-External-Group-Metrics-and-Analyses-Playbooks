@@ -1,0 +1,383 @@
+
+# Threat Hunting Engine — Full Implementation Blueprint
+
+## 1. Purpose and scope
+
+**Goal:** continuously search across logs, endpoints, identities, and network flows for **state‑aligned / hybrid‑threat behaviors** that may not yet be covered by signatures.
+
+- Input: normalized telemetry (from Network Telemetry Pipeline, Identity layer, endpoints, cloud).
+- Output: **hunt findings**, **enriched alerts**, and **hypothesis‑driven investigations**.
+
+---
+
+## 2. High‑level architecture
+
+**Core components:**
+
+- **Hunt Orchestrator Service**
+  - Schedules hunts (cron, ad‑hoc, triggered by intel).
+  - Manages hunt definitions, versions, and results.
+- **Hunt Execution Engine**
+  - Runs queries / ML jobs against data stores.
+  - Supports batch and streaming hunts.
+- **Hunt Definition Registry**
+  - Stores hunt playbooks (YAML/JSON) with metadata, queries, thresholds.
+- **Result & Case Manager**
+  - Converts hits into cases, tracks status, ownership, and outcomes.
+- **Analyst Workbench UI**
+  - UI for creating, running, and reviewing hunts.
+
+**Data dependencies:**
+
+- Log / event store (e.g., ClickHouse, Elastic, BigQuery).
+- Identity events (authN/authZ, risk).
+- Network flows, DNS, proxy logs.
+- Endpoint telemetry (EDR).
+- Threat intel feeds (IOCs, TTPs).
+
+---
+
+## 3. Hunt definition model
+
+### 3.1 Logical schema
+
+```yaml
+id: "hunt_suspicious_admin_logins"
+version: 3
+name: "Suspicious admin logins from rare countries"
+description: "Detects admin accounts logging in from countries rarely seen in baseline."
+owner: "secops-hunt-team"
+tags: ["identity", "geo", "admin", "apt"]
+severity: "high"
+
+data_sources:
+  - "auth_events"
+  - "geo_baseline"
+
+schedule:
+  type: "cron"
+  expression: "0 * * * *"   # hourly
+
+parameters:
+  rare_country_threshold: 0.01
+  min_risk_score: 0.5
+
+query:
+  language: "sql"
+  body: |
+    SELECT
+      a.identity_id,
+      a.ip_address,
+      a.geo,
+      a.risk_score,
+      a.occurred_at
+    FROM auth_events a
+    JOIN identity_role_assignments r ON r.identity_id = a.identity_id
+    JOIN roles ro ON ro.id = r.role_id
+    WHERE
+      a.event_type = 'login_success'
+      AND ro.name IN ('admin', 'super_admin')
+      AND a.risk_score >= {{min_risk_score}}
+      AND a.geo IN (
+        SELECT geo
+        FROM geo_baseline
+        WHERE probability < {{rare_country_threshold}}
+      );
+
+threshold:
+  type: "row_count"
+  min_rows: 1
+
+actions:
+  - type: "create_case"
+    case_type: "suspicious_admin_activity"
+    severity: "high"
+  - type: "notify"
+    channel: "secops-slack"
+    template: "suspicious_admin_logins"
+```
+
+### 3.2 Storage schema (relational)
+
+```sql
+CREATE TABLE hunts (
+  id          TEXT PRIMARY KEY,
+  version     INT NOT NULL,
+  name        TEXT NOT NULL,
+  description TEXT,
+  owner       TEXT NOT NULL,
+  tags        TEXT[],
+  severity    TEXT CHECK (severity IN ('low','medium','high','critical')),
+  definition  JSONB NOT NULL,
+  is_active   BOOLEAN NOT NULL DEFAULT true,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE hunt_runs (
+  id          UUID PRIMARY KEY,
+  hunt_id     TEXT NOT NULL,
+  hunt_version INT NOT NULL,
+  started_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  finished_at TIMESTAMPTZ,
+  status      TEXT NOT NULL CHECK (status IN ('running','success','failed','partial')),
+  error       TEXT,
+  parameters  JSONB,
+  result_stats JSONB
+);
+
+CREATE TABLE hunt_findings (
+  id          UUID PRIMARY KEY,
+  hunt_run_id UUID NOT NULL REFERENCES hunt_runs(id) ON DELETE CASCADE,
+  hunt_id     TEXT NOT NULL,
+  severity    TEXT NOT NULL,
+  identity_id UUID,
+  resource    TEXT,
+  details     JSONB,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  case_id     UUID
+);
+```
+
+---
+
+## 4. Hunt Orchestrator & Execution Engine
+
+### 4.1 Orchestrator responsibilities
+
+- Load active hunts.
+- Resolve schedules (cron, manual, triggered).
+- Spawn execution jobs with parameters.
+- Track run status and metrics.
+
+### 4.2 Execution flow (pseudo‑TypeScript)
+
+```ts
+interface HuntDefinition {
+  id: string;
+  version: number;
+  schedule: { type: "cron" | "manual" | "triggered"; expression?: string };
+  query: { language: "sql"; body: string };
+  parameters: Record<string, any>;
+  threshold: { type: "row_count"; min_rows: number };
+  actions: any[];
+}
+
+async function executeHunt(hunt: HuntDefinition, runId: string) {
+  const startedAt = new Date();
+  try {
+    const sql = renderTemplate(hunt.query.body, hunt.parameters);
+    const rows = await runQuery(sql); // against log store
+
+    const resultStats = { rowCount: rows.length };
+    await saveHuntRunUpdate(runId, {
+      status: "success",
+      finished_at: new Date(),
+      result_stats: resultStats
+    });
+
+    if (rows.length >= hunt.threshold.min_rows) {
+      await createFindingsAndActions(hunt, runId, rows);
+    }
+  } catch (err) {
+    await saveHuntRunUpdate(runId, {
+      status: "failed",
+      finished_at: new Date(),
+      error: String(err)
+    });
+  }
+}
+```
+
+### 4.3 Findings & actions
+
+```ts
+async function createFindingsAndActions(
+  hunt: HuntDefinition,
+  runId: string,
+  rows: any[]
+) {
+  for (const row of rows) {
+    const findingId = await insertFinding({
+      hunt_run_id: runId,
+      hunt_id: hunt.id,
+      severity: hunt.severity || "medium",
+      identity_id: row.identity_id || null,
+      resource: row.resource || null,
+      details: row
+    });
+
+    for (const action of hunt.actions) {
+      await executeAction(action, findingId, row);
+    }
+  }
+}
+```
+
+---
+
+## 5. Action framework
+
+### 5.1 Supported action types (initial set)
+
+- `create_case` — open a case in the Case Manager.
+- `notify` — send to Slack/Teams/email.
+- `tag_identity` — add a risk tag to an identity.
+- `enrich` — call external enrichment (e.g., IP reputation).
+
+### 5.2 Example action executor
+
+```ts
+async function executeAction(action: any, findingId: string, row: any) {
+  switch (action.type) {
+    case "create_case":
+      await createCase({
+        type: action.case_type,
+        severity: action.severity,
+        findingId,
+        context: row
+      });
+      break;
+    case "notify":
+      await sendNotification(action.channel, action.template, { findingId, row });
+      break;
+    case "tag_identity":
+      if (row.identity_id) {
+        await addIdentityTag(row.identity_id, action.tag);
+      }
+      break;
+    default:
+      console.warn("Unknown action type", action.type);
+  }
+}
+```
+
+---
+
+## 6. Example hunts (APT / hybrid‑threat oriented)
+
+### 6.1 Impossible travel + privileged access
+
+```yaml
+id: "hunt_impossible_travel_privileged"
+version: 1
+name: "Impossible travel for privileged accounts"
+severity: "high"
+tags: ["identity", "geo", "privileged", "apt"]
+
+data_sources:
+  - "auth_events"
+  - "geo_distance"
+
+schedule:
+  type: "cron"
+  expression: "*/30 * * * *"  # every 30 minutes
+
+parameters:
+  min_distance_km: 3000
+  max_time_minutes: 60
+
+query:
+  language: "sql"
+  body: |
+    WITH logins AS (
+      SELECT
+        identity_id,
+        occurred_at,
+        geo,
+        ip_address,
+        risk_score,
+        LAG(occurred_at) OVER (PARTITION BY identity_id ORDER BY occurred_at) AS prev_time,
+        LAG(geo) OVER (PARTITION BY identity_id ORDER BY occurred_at) AS prev_geo
+      FROM auth_events
+      WHERE event_type = 'login_success'
+    )
+    SELECT *
+    FROM logins
+    WHERE
+      prev_time IS NOT NULL
+      AND geo_distance_km(prev_geo, geo) >= {{min_distance_km}}
+      AND EXTRACT(EPOCH FROM (occurred_at - prev_time))/60 <= {{max_time_minutes}};
+
+threshold:
+  type: "row_count"
+  min_rows: 1
+
+actions:
+  - type: "create_case"
+    case_type: "identity_compromise_suspected"
+    severity: "high"
+  - type: "notify"
+    channel: "secops-slack"
+    template: "impossible_travel_alert"
+```
+
+### 6.2 Command‑and‑control beacon patterns (network)
+
+```yaml
+id: "hunt_suspicious_beaconing"
+version: 1
+name: "Suspicious periodic beaconing to rare domains"
+severity: "high"
+tags: ["network", "c2", "apt"]
+
+data_sources:
+  - "netflow"
+  - "dns_logs"
+
+parameters:
+  min_beacons: 10
+  max_jitter_seconds: 30
+
+query:
+  language: "sql"
+  body: |
+    SELECT
+      src_ip,
+      dst_domain,
+      COUNT(*) AS cnt,
+      stddev_samp(time_bucket_gap) AS jitter
+    FROM (
+      SELECT
+        src_ip,
+        dst_domain,
+        occurred_at,
+        occurred_at - LAG(occurred_at) OVER (PARTITION BY src_ip, dst_domain ORDER BY occurred_at) AS time_bucket_gap
+      FROM dns_logs
+    ) t
+    GROUP BY src_ip, dst_domain
+    HAVING
+      COUNT(*) >= {{min_beacons}}
+      AND stddev_samp(time_bucket_gap) <= interval '{{max_jitter_seconds}} seconds';
+
+threshold:
+  type: "row_count"
+  min_rows: 1
+
+actions:
+  - type: "create_case"
+    case_type: "possible_c2_beaconing"
+    severity: "high"
+```
+
+---
+
+## 7. Analyst Workbench (functional spec)
+
+Key capabilities:
+
+- Browse hunt catalog (search by tags, severity, owner).
+- View run history, stats, and findings.
+- Clone and modify hunts (forking).
+- Run ad‑hoc hunts with custom parameters and time ranges.
+- Export results (CSV/JSON) for deeper offline analysis.
+- Attach notes and mark findings as true/false positive.
+
+---
+
+## 8. Integration points
+
+- **Identity layer:** use identity IDs, roles, risk scores in hunts; tag identities based on findings.
+- **Network Telemetry Pipeline:** primary source for netflow/DNS/proxy hunts.
+- **Case Management / IR Platform:** findings become cases with full context.
+- **Threat Intel:** hunts can be parameterized by current IOC/TTP sets.
