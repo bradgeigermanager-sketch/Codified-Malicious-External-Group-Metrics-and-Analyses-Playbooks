@@ -1,0 +1,173 @@
+
+# **Reconnaissance Signal Detector — Full Implementation Blueprint**
+
+This subsystem detects:
+
+- Cyber reconnaissance (scanning, enumeration, probing)  
+- Physical reconnaissance (surveillance, casing, pattern‑mapping)  
+- HUMINT reconnaissance (targeting, elicitation, social engineering)  
+- Influence reconnaissance (audience testing, narrative probing)  
+- Supply‑chain reconnaissance (vendor mapping, dependency probing)  
+
+It fuses **multi‑vector telemetry**, **behavioral signals**, and **threat‑actor TTPs** to identify early‑stage hostile intent.
+
+---
+
+## **1. System Architecture Overview**
+
+### Core Components
+- **Recon Telemetry Collector** — ingests cyber, physical, HUMINT, and OSINT reconnaissance signals  
+- **Behavioral Baseline Engine** — establishes normal patterns for identities, facilities, and networks  
+- **Recon Feature Engine** — extracts reconnaissance‑specific features  
+- **Anomaly Detection Engine** — identifies deviations from baseline  
+- **Threat Scenario Engine** — models known recon TTPs  
+- **Correlation Layer** — links recon signals to other threat vectors  
+- **Fusion Output Layer** — pushes alerts to dashboards & briefings  
+
+---
+
+## **2. Data Inputs**
+
+### A. Cyber Recon Signals
+- Port scanning  
+- Credential stuffing attempts  
+- Directory enumeration  
+- Cloud asset probing  
+- DNS reconnaissance  
+- Web application fingerprinting  
+
+### B. Physical Recon Signals
+- Repeated perimeter visits  
+- Camera analytics detecting casing behavior  
+- Badge anomalies near sensitive areas  
+- Tailgating attempts  
+- Drone or aerial surveillance indicators  
+
+### C. HUMINT Recon Signals
+- Social engineering attempts  
+- Elicitation behaviors  
+- Foreign contact attempts  
+- Unusual meeting patterns  
+- Insider targeting  
+
+### D. Influence Recon Signals
+- Narrative testing  
+- Audience probing  
+- Micro‑targeted messaging  
+- Botnet “test bursts”  
+
+### E. Supply Chain Recon Signals
+- Vendor mapping  
+- Dependency probing  
+- Third‑party enumeration  
+- Procurement intelligence gathering  
+
+---
+
+## **3. Recon Feature Engineering**
+
+### Core Feature Categories
+- **Surface Mapping Indicators** — scanning, enumeration, probing  
+- **Pattern Repetition** — repeated visits, repeated queries  
+- **Target Selection Behavior** — narrowing focus on specific assets or people  
+- **Temporal Drift** — changes in timing or frequency  
+- **Cross‑Vector Recon Alignment** — cyber + physical + HUMINT alignment  
+- **Actor Capability Indicators** — sophistication, tooling, infrastructure  
+
+### Feature Storage
+- Stored in time‑series DB  
+- Indexed by identity, asset, facility, and IP/host  
+- Supports sliding‑window analysis (1h, 24h, 7d, 30d)  
+
+---
+
+## **4. Anomaly Detection Engine**
+
+### ML Models
+- Isolation Forest for recon anomalies  
+- LSTM models for reconnaissance drift  
+- GNNs for infrastructure mapping  
+- Bayesian changepoint detection for sudden recon spikes  
+
+### Rule‑Based Models
+- Known recon TTPs (MITRE PRE‑ATT&CK)  
+- Multi‑vector recon patterns  
+- High‑risk asset targeting  
+- Recon → intrusion escalation patterns  
+
+### Output
+- Severity score  
+- Confidence score  
+- Contributing features  
+- Recommended actions  
+
+---
+
+## **5. Threat Scenario Engine**
+
+### Pre‑Built Scenarios
+- **Multi‑Vector Reconnaissance**  
+- **Pre‑Intrusion Cyber Recon**  
+- **Physical Casing + Cyber Probing**  
+- **Insider Targeting Recon**  
+- **Supply Chain Reconnaissance**  
+
+Each scenario includes:
+- Required signals  
+- Detection logic  
+- Escalation thresholds  
+- Automated response options  
+
+---
+
+## **6. Correlation Layer**
+
+### Correlation Types
+- **Cyber ↔ Physical**  
+- **Cyber ↔ HUMINT**  
+- **Physical ↔ HUMINT**  
+- **Influence ↔ Cyber**  
+- **Supply Chain ↔ Cyber**  
+
+### Examples
+- Badge anomalies near a facility + cyber scanning of that facility’s IP range  
+- Social engineering attempts + cloud asset enumeration  
+- Vendor probing + ICS/OT scanning  
+
+---
+
+## **7. Analyst Workbench Integration**
+
+### Capabilities
+- Recon timeline visualization  
+- Infrastructure mapping graphs  
+- Physical‑cyber correlation maps  
+- Identity‑centric recon graphs  
+- Exportable case files  
+
+---
+
+## **8. Response Automation**
+
+### Automated Actions
+- Increase monitoring on targeted assets  
+- Trigger IR pre‑activation  
+- Notify physical security  
+- Enforce MFA or privilege reduction  
+- Update leadership briefing  
+
+### Integration Points
+- **Cross‑Vector Correlation Engine**  
+- **Unified Threat Dashboard**  
+- **Leadership Briefing Generator**  
+
+---
+
+## **9. Governance & Oversight**
+
+### Controls
+- Full audit logging  
+- Chain‑of‑custody for recon detections  
+- Privacy‑preserving transformations  
+- Role‑based access  
+- Explainability for ML models  
