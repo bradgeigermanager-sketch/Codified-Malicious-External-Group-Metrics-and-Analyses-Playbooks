@@ -1,0 +1,321 @@
+
+# 🏢 **Access Zoning & Badge Intelligence — Full Implementation Blueprint**
+
+This subsystem is the **physical‑security analog** to the Zero‑Trust Identity Layer.  
+It enforces and analyzes **who can be where**, **when**, and **under what conditions**, and detects **foreign‑aligned infiltration patterns**.
+
+It integrates:
+
+- badge systems  
+- turnstiles  
+- door controllers  
+- facility maps  
+- identity risk  
+- visitor logs  
+- physical anomaly detection  
+
+And feeds all of it into the fusion center.
+
+---
+
+# 1. 🎯 Purpose & Scope
+
+The Access Zoning & Badge Intelligence system must:
+
+- Define **zones** (public, restricted, sensitive, critical).  
+- Enforce **least‑privilege physical access**.  
+- Detect **badge misuse**, **tailgating**, **piggybacking**, and **anomalous movement**.  
+- Correlate physical access with **identity risk**, **network activity**, and **HUMINT indicators**.  
+- Provide **real‑time alerts** and **automated restrictions**.
+
+---
+
+# 2. 🧩 High‑Level Architecture
+
+
+
+
+
+### Core components
+
+- **Zone Directory Service (ZDS)**  
+  Defines zones, doors, access levels, and sensitivity.
+
+- **Badge Event Ingestor**  
+  Consumes events from badge readers, turnstiles, and door controllers.
+
+- **Physical Access Policy Engine (P‑PDP)**  
+  Evaluates whether an identity may enter a zone at a given time.
+
+- **Movement Analyzer**  
+  Detects anomalous physical movement patterns.
+
+- **Tailgating Detector**  
+  Uses sensor fusion (badge + motion + camera metadata).
+
+- **Physical‑Cyber Correlator**  
+  Links badge events with cyber activity (e.g., login from inside a room the user never entered).
+
+- **Alert & Containment Engine**  
+  Restricts badge access, notifies security, or locks zones.
+
+---
+
+# 3. 🗺️ Zone Directory Service (ZDS)
+
+### 3.1 Zone model
+
+```json
+{
+  "zone_id": "zone-lab-3",
+  "name": "Research Lab 3",
+  "sensitivity": "critical",
+  "allowed_roles": ["researcher_lvl3", "security"],
+  "allowed_hours": ["08:00-18:00"],
+  "geo": "Building A, Floor 2"
+}
+```
+
+### 3.2 Door model
+
+```json
+{
+  "door_id": "door-a2-17",
+  "zone_id": "zone-lab-3",
+  "controller_ip": "10.10.2.17",
+  "direction": "entry"
+}
+```
+
+### 3.3 Storage schema
+
+```sql
+CREATE TABLE zones (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  sensitivity TEXT,
+  allowed_roles TEXT[],
+  allowed_hours TEXT[],
+  geo TEXT
+);
+
+CREATE TABLE doors (
+  id TEXT PRIMARY KEY,
+  zone_id TEXT REFERENCES zones(id),
+  controller_ip INET,
+  direction TEXT
+);
+```
+
+---
+
+# 4. 🪪 Badge Event Ingestor
+
+### 4.1 Event schema
+
+```json
+{
+  "event_id": "uuid",
+  "timestamp": "2026-05-28T21:44:00Z",
+  "badge_id": "badge-12345",
+  "identity_id": "user:alice",
+  "door_id": "door-a2-17",
+  "result": "granted",
+  "device_fingerprint": "reader-17",
+  "geo": "Building A"
+}
+```
+
+### 4.2 Ingestion flow
+
+1. Door controller → MQTT/Syslog  
+2. Fluent Bit → Kafka topic `raw_badge_events`  
+3. Normalizer → `normalized_badge_events`  
+4. Enricher → `enriched_badge_events`  
+5. Router → storage + detection engines  
+
+---
+
+# 5. 🛡️ Physical Access Policy Engine (P‑PDP)
+
+### 5.1 Evaluation inputs
+
+- identity roles  
+- zone sensitivity  
+- time of day  
+- identity risk score  
+- recent cyber anomalies  
+- visitor status  
+- foreign‑contact flags  
+
+### 5.2 Example policy (YAML)
+
+```yaml
+id: "critical_zone_access"
+effect: "deny-override"
+
+when:
+  zone.sensitivity == "critical"
+
+rules:
+  - id: "allow_researchers"
+    effect: "allow"
+    condition: >
+      "researcher_lvl3" in identity.roles &&
+      context.time in zone.allowed_hours &&
+      identity.risk < 0.5
+
+  - id: "deny_high_risk"
+    effect: "deny"
+    condition: >
+      identity.risk >= 0.5
+```
+
+### 5.3 P‑PDP response
+
+```json
+{
+  "decision": "deny",
+  "reason": "identity_risk_high",
+  "policy_id": "critical_zone_access",
+  "obligations": [
+    { "type": "notify_security", "severity": "high" }
+  ]
+}
+```
+
+---
+
+# 6. 🚶 Movement Analyzer
+
+
+
+
+
+### 6.1 Detects:
+
+- **Unusual path sequences**  
+  e.g., user normally moves A → B → C, but now A → D → Server Room.
+
+- **Speed anomalies**  
+  Movement between distant zones faster than physically possible.
+
+- **Zone hopping**  
+  Rapid entry/exit across sensitive areas.
+
+- **Badge cloning**  
+  Same badge used in two buildings simultaneously.
+
+### 6.2 Example anomaly rule
+
+```yaml
+id: "impossible_physical_travel"
+condition: >
+  distance(prev_zone, current_zone) > max_possible_distance(time_delta)
+severity: "high"
+action: "alert"
+```
+
+---
+
+# 7. 👥 Tailgating & Piggybacking Detection
+
+### Inputs
+
+- badge events  
+- door open/close sensors  
+- motion sensors  
+- camera metadata (NOT video, just counts)  
+
+### Detection logic
+
+- Door opens → 1 badge swipe → 2+ bodies detected  
+- Badge swipe denied → door still opens  
+- Badge swipe → no body detected (ghost swipe)  
+
+### Example event correlation
+
+```json
+{
+  "door_id": "door-a2-17",
+  "badge_swipes": 1,
+  "bodies_detected": 3,
+  "result": "tailgating_suspected"
+}
+```
+
+---
+
+# 8. 🔗 Physical‑Cyber Correlator
+
+This is where things get powerful.
+
+### Correlation examples
+
+- Badge never used to enter building → login from inside building → **identity compromise**.  
+- User enters restricted lab → immediately accesses sensitive database → **insider threat**.  
+- Foreign visitor badge used → network beaconing from same area → **HUMINT + cyber fusion**.
+
+### Correlation rule example
+
+```yaml
+id: "cyber_activity_without_physical_presence"
+condition: >
+  login.location == "Building A" AND
+  NOT badge_events.exists(identity_id, "Building A", last_2_hours)
+severity: "critical"
+action: "contain_identity"
+```
+
+---
+
+# 9. 🚨 Alert & Containment Engine
+
+### Possible actions
+
+- Lock specific doors  
+- Restrict badge access  
+- Notify physical security  
+- Trigger camera review  
+- Increase identity risk score  
+- Force MFA or disable account  
+
+### Example containment policy
+
+```yaml
+id: "contain_tailgating_into_sensitive_zone"
+trigger:
+  anomaly_type: "tailgating"
+  zone.sensitivity: "critical"
+actions:
+  - type: "lock_zone"
+  - type: "notify_security"
+  - type: "increase_identity_risk"
+```
+
+---
+
+# 10. 🖥️ Analyst Workbench (Physical Security)
+
+
+
+
+
+Capabilities:
+
+- Real‑time map of badge events  
+- Heatmaps of movement patterns  
+- Tailgating alerts  
+- Zone sensitivity overlays  
+- Identity‑linked physical timelines  
+- Exportable incident packages  
+
+---
+
+# 11. 🔗 Integration Points
+
+- **Identity Layer:** risk scores, role mapping, identity restrictions.  
+- **Threat Hunting Engine:** physical anomalies seed cyber hunts.  
+- **APT Behavior Models:** physical anomalies increase compromise probability.  
+- **Fusion Center:** correlates physical, cyber, HUMINT, and influence signals.  
+- **Visitor Pattern Analytics:** next subsystem in the chain.  
