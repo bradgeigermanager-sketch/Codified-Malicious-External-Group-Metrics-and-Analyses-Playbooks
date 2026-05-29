@@ -1,0 +1,290 @@
+
+# 🧠 **APT Behavior Detection Models — Full Implementation Blueprint**
+
+Foreign‑state APTs behave differently from commodity malware or random attackers.  
+This subsystem builds **behavioral, statistical, and ML‑based models** that detect:
+
+- long‑dwell intrusions  
+- stealthy lateral movement  
+- credential misuse  
+- command‑and‑control (C2) patterns  
+- privilege escalation  
+- data staging & exfiltration  
+- living‑off‑the‑land (LOTL) activity  
+
+This is the “brains” behind advanced detection.
+
+---
+
+# 1. System Architecture Overview
+
+
+
+
+
+### Core components
+
+- **Behavioral Feature Extractor**  
+  Converts raw telemetry into structured behavioral signals.
+
+- **Model Registry**  
+  Stores ML/statistical models, versions, metadata, thresholds.
+
+- **Detection Engine**  
+  Runs models in batch + streaming modes.
+
+- **APT TTP Knowledge Graph**  
+  Maps events to MITRE ATT&CK techniques.
+
+- **Enrichment Layer**  
+  Adds context: identity risk, device posture, geo, threat intel.
+
+- **Alert Generator**  
+  Produces enriched alerts with confidence scores.
+
+---
+
+# 2. Data Inputs
+
+### Required telemetry sources
+
+- **Identity layer:**  
+  AuthN/AuthZ events, risk scores, device posture.
+
+- **Network telemetry:**  
+  Netflow, DNS, proxy logs, TLS fingerprints.
+
+- **Endpoint telemetry:**  
+  Process creation, command lines, registry changes, file ops.
+
+- **Cloud logs:**  
+  IAM actions, API calls, resource modifications.
+
+- **Threat intel:**  
+  IOCs, TTPs, infrastructure fingerprints.
+
+---
+
+# 3. Feature Engineering Layer
+
+### 3.1 Identity‑centric features
+
+- Login velocity  
+- Impossible travel  
+- Privilege escalation attempts  
+- MFA bypass attempts  
+- Rare role usage  
+- Cross‑environment access anomalies  
+
+### 3.2 Network features
+
+- Beacon periodicity  
+- Domain rarity score  
+- JA3/JA3S fingerprint similarity  
+- Data transfer volume anomalies  
+- Lateral movement patterns (SMB, RDP, WinRM)
+
+### 3.3 Endpoint features
+
+- LOLBins usage (PowerShell, WMIC, CertUtil)  
+- Suspicious parent/child process chains  
+- Credential dumping indicators  
+- Persistence mechanisms  
+
+---
+
+# 4. Model Types
+
+### 4.1 Statistical Baseline Models
+
+Used for “rare behavior” detection.
+
+- **Z‑score anomaly detection**  
+- **Time‑series deviation models**  
+- **Peer‑group analysis** (compare user to similar users)
+
+### 4.2 Machine Learning Models
+
+- **Isolation Forest** for outlier detection  
+- **Autoencoders** for reconstruction‑error anomalies  
+- **Graph Neural Networks (GNNs)** for lateral movement patterns  
+- **Sequence models (LSTM/Transformer)** for command sequences  
+
+### 4.3 Rule‑Hybrid Models
+
+Combine ML + ATT&CK‑mapped rules.
+
+Example:
+
+- ML flags unusual PowerShell usage  
+- Rule checks if command matches known APT TTP  
+- Combined score triggers alert  
+
+---
+
+# 5. Model Registry
+
+### Schema (relational)
+
+```sql
+CREATE TABLE apt_models (
+  id            UUID PRIMARY KEY,
+  name          TEXT NOT NULL,
+  version       INT NOT NULL,
+  model_type    TEXT NOT NULL, -- 'isolation_forest', 'autoencoder', 'gnn', etc.
+  description   TEXT,
+  features      JSONB NOT NULL,
+  thresholds    JSONB NOT NULL,
+  artifact_uri  TEXT NOT NULL,
+  created_at    TIMESTAMPTZ DEFAULT now(),
+  updated_at    TIMESTAMPTZ DEFAULT now(),
+  is_active     BOOLEAN DEFAULT true
+);
+```
+
+---
+
+# 6. Detection Engine
+
+### 6.1 Streaming detection (pseudo‑TypeScript)
+
+```ts
+async function processEvent(event) {
+  const features = extractFeatures(event);
+
+  const activeModels = await loadActiveModels();
+
+  for (const model of activeModels) {
+    const score = await model.predict(features);
+
+    if (score >= model.thresholds.alert) {
+      await createAPTAlert({
+        model_id: model.id,
+        model_version: model.version,
+        score,
+        event,
+        features
+      });
+    }
+  }
+}
+```
+
+### 6.2 Batch detection
+
+Runs hourly/daily for long‑term patterns:
+
+- Data staging  
+- Slow exfiltration  
+- Long‑term beaconing  
+- Privilege creep  
+
+---
+
+# 7. APT TTP Knowledge Graph
+
+
+
+
+
+### Purpose
+
+Map events → behaviors → ATT&CK techniques → APT clusters.
+
+### Graph schema (conceptual)
+
+Nodes:
+
+- `Event`  
+- `Feature`  
+- `Technique (Txxxx)`  
+- `Tactic (TAxxxx)`  
+- `APT Group`  
+
+Edges:
+
+- `event -> feature`  
+- `feature -> technique`  
+- `technique -> apt_group`  
+
+### Example mapping
+
+- PowerShell encoded command → T1059.001  
+- Credential dumping → T1003  
+- SMB lateral movement → T1021.002  
+
+---
+
+# 8. Alert Generation
+
+### Alert schema
+
+```json
+{
+  "alert_type": "apt_behavior_detected",
+  "model_id": "c2f1-...",
+  "model_version": 4,
+  "score": 0.92,
+  "confidence": "high",
+  "mapped_techniques": ["T1059.001", "T1021.002"],
+  "identity_id": "b1f0-...",
+  "device_id": "d3f1-...",
+  "summary": "Suspicious PowerShell + lateral movement pattern",
+  "raw_events": [...],
+  "features": {...},
+  "timestamp": "2026-05-28T03:12:00Z"
+}
+```
+
+---
+
+# 9. Example APT Behavior Models
+
+### 9.1 Lateral Movement GNN Model
+
+- Nodes: devices, users, processes  
+- Edges: authentication, process spawn, network connection  
+- Output: anomaly score for movement paths  
+
+### 9.2 Beaconing Autoencoder
+
+- Input: inter‑arrival times  
+- Output: reconstruction error  
+- High error → periodic beaconing  
+
+### 9.3 Identity Compromise Sequence Model
+
+- Input: sequence of identity events  
+- Output: probability of compromise  
+
+---
+
+# 10. Analyst Workflows
+
+### 10.1 Triage
+
+- Review mapped ATT&CK techniques  
+- Check identity risk  
+- Check device posture  
+- Review raw events  
+
+### 10.2 Escalation
+
+- Convert to case  
+- Trigger containment (disable account, isolate device)  
+
+---
+
+# 11. Integration Points
+
+- **Threat Hunting Engine:**  
+  Uses model outputs as hunt seeds.
+
+- **Lateral Movement Containment System:**  
+  Uses GNN scores to trigger segmentation.
+
+- **Identity Layer:**  
+  Increases risk score for suspicious identities.
+
+- **Fusion Center:**  
+  Correlates APT alerts with physical/influence signals.
