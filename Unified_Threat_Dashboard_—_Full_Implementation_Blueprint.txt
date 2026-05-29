@@ -1,0 +1,193 @@
+
+# 🖥️ **Unified Threat Dashboard — Full Implementation Blueprint**
+
+The dashboard provides **real‑time situational awareness** across all threat vectors:
+
+- Cyber intrusions  
+- Physical access anomalies  
+- Insider threat signals  
+- Influence operations  
+- Supply chain risks  
+- Diplomatic/geopolitical indicators  
+
+It is the **visual front‑end** of the Fusion Center.
+
+---
+
+# 1. **System Architecture Overview**
+
+### Core Components
+- **Real‑Time Data Stream Layer** — subscribes to correlated threat events  
+- **Threat Visualization Engine** — renders maps, graphs, timelines, and heatmaps  
+- **Identity & Asset Context Layer** — enriches events with roles, devices, facilities  
+- **Risk Aggregation Engine** — computes org‑wide and vector‑specific risk levels  
+- **Analyst Interaction Layer** — filtering, pivoting, drill‑down, case creation  
+- **Dashboard Template Engine** — customizable views for different roles  
+- **Alerting & Notification Layer** — pushes high‑severity events to leadership  
+
+---
+
+# 2. **Primary Dashboard Views**
+
+### A. **Global Threat Overview**
+- Organization‑wide risk score  
+- Top active threat events  
+- Cross‑vector heatmap  
+- Trending anomalies (24h, 7d, 30d)  
+- Threat actor clusters  
+
+### B. **Identity‑Centric View**
+- High‑risk identities  
+- Behavioral drift indicators  
+- Physical‑cyber alignment map  
+- Peer‑group deviation charts  
+
+### C. **Facility & Physical Security View**
+- Badge anomalies  
+- Visitor pattern deviations  
+- Counter‑surveillance detections  
+- Facility risk heatmap  
+
+### D. **Cyber Operations View**
+- APT detections  
+- Credential abuse  
+- Lateral movement  
+- Network telemetry anomalies  
+- Endpoint risk map  
+
+### E. **Influence & Information Operations View**
+- Coordinated narrative spikes  
+- Botnet influence activity  
+- Sentiment anomalies  
+- Cross‑platform disinfo clusters  
+
+### F. **Supply Chain & Infrastructure View**
+- Vendor risk alerts  
+- Hardware integrity failures  
+- SBOM correlation issues  
+- ICS/OT anomalies  
+
+---
+
+# 3. **Threat Visualization Engine**
+
+### Visual Components
+- **Correlation Graphs** — identity, event, actor, infrastructure  
+- **Timelines** — multi‑vector event sequences  
+- **Heatmaps** — facilities, networks, geopolitical regions  
+- **Risk Gauges** — severity, confidence, impact  
+- **Flow Diagrams** — attack paths, influence propagation  
+
+### Interaction Features
+- Hover‑to‑expand details  
+- Click‑to‑pivot into identity or facility  
+- Multi‑vector filtering  
+- Time‑window slider  
+- Exportable snapshots  
+
+---
+
+# 4. **Risk Aggregation Engine**
+
+### Inputs
+- Cross‑Vector Correlation Engine  
+- Insider Threat Behavioral Engine  
+- Network Telemetry Pipeline  
+- Influence detection subsystems  
+- Supply chain intelligence  
+
+### Outputs
+- **Org‑wide risk score**  
+- **Vector‑specific risk scores** (cyber, physical, HUMINT, influence, supply chain)  
+- **Facility‑level risk**  
+- **Identity‑level risk**  
+- **Trend analysis**  
+
+Risk is computed using:
+- Weighted scoring  
+- ML‑based anomaly fusion  
+- Temporal drift analysis  
+- Actor attribution confidence  
+
+---
+
+# 5. **Analyst Interaction Layer**
+
+### Core Capabilities
+- **Drill‑down investigation**  
+- **Case creation** with chain‑of‑custody  
+- **Pivoting** across identities, devices, facilities, narratives  
+- **Correlation graph exploration**  
+- **Annotation & tagging**  
+- **Export to IR platform**  
+
+### Collaboration Features
+- Shared notes  
+- Analyst handoff workflow  
+- Case timeline auto‑generation  
+
+---
+
+# 6. **Dashboard Template Engine**
+
+### Pre‑Built Templates
+- **Fusion Center Director View**  
+- **Cyber Operations View**  
+- **Physical Security View**  
+- **Influence Operations View**  
+- **Executive Leadership View**  
+
+### Customization Options
+- Widget layout  
+- Data sources  
+- Severity thresholds  
+- Color themes  
+- Role‑based visibility  
+
+---
+
+# 7. **Alerting & Notification Layer**
+
+### Trigger Types
+- High‑severity correlated threat events  
+- Insider threat score > 80  
+- Facility risk spike  
+- Coordinated narrative detection  
+- Vendor compromise alerts  
+
+### Delivery Channels
+- Dashboard pop‑ups  
+- Secure mobile app  
+- Leadership Briefing Generator  
+- Crisis Communications Orchestrator  
+
+---
+
+# 8. **Governance & Oversight**
+
+### Controls
+- Full audit logging  
+- Access control by role & clearance  
+- Redaction engine for sensitive identities  
+- Dashboard view versioning  
+- Compliance logging for all exports  
+
+---
+
+# 9. **Integration Points**
+
+- **Cross‑Vector Correlation Engine**  
+- **Leadership Briefing Generator**  
+- **Hybrid Threat IR Platform**  
+- **Intelligence Ingestion Pipeline**  
+
+---
+
+# 🔵 **Status Update — Master Project Progress**
+
+| # | Project | Status |
+|---|---------|--------|
+| 1–12 | All prior systems | ✔️ Produced |
+| 13 | **Unified Threat Dashboard** | 🔵 **Produced here** |
+| 14 | Intelligence Ingestion Pipeline | ⏳ Not yet produced |
+
