@@ -1,0 +1,211 @@
+
+# 🧠 **Cross‑Vector Correlation Engine — Full Implementation Blueprint**
+
+This engine ingests signals from every subsystem and produces:
+
+- Unified threat events  
+- Multi‑vector correlation graphs  
+- Actor attribution confidence  
+- Severity scoring  
+- Recommended actions  
+- Leadership‑ready summaries  
+
+It is the **core of the Fusion Center Architecture**.
+
+---
+
+# 1. **System Architecture Overview**
+
+### Core Components
+- **Event Normalization Layer** — converts all subsystem alerts into a unified schema  
+- **Correlation Graph Engine** — builds identity‑centric and event‑centric graphs  
+- **Temporal Correlation Engine** — aligns events across time windows  
+- **Cross‑Vector Rule Engine** — detects multi‑domain threat patterns  
+- **ML‑Driven Correlation Engine** — identifies hidden relationships  
+- **Threat Event Constructor** — produces unified threat objects  
+- **Fusion Center Output Layer** — pushes correlated events to dashboards & briefings  
+
+---
+
+# 2. **Data Inputs**
+
+### A. Cyber Signals
+- APT detections  
+- Credential abuse  
+- Lateral movement  
+- Network anomalies  
+- Endpoint telemetry  
+
+### B. Physical & HUMINT Signals
+- Badge anomalies  
+- Visitor pattern deviations  
+- Counter‑surveillance detections  
+- Insider threat behavioral scores  
+
+### C. Influence & Information Operations
+- Coordinated narrative detections  
+- Botnet influence activity  
+- Sentiment anomalies  
+- Disinfo campaign indicators  
+
+### D. Supply Chain & Infrastructure
+- Vendor risk alerts  
+- Hardware integrity failures  
+- SBOM correlation issues  
+- ICS/OT anomalies  
+
+### E. Geopolitical & External Intelligence
+- Diplomatic activity changes  
+- Foreign travel patterns  
+- OSINT indicators  
+
+---
+
+# 3. **Unified Event Schema**
+
+Every subsystem alert is normalized into a **Cross‑Vector Event Object**:
+
+```
+{
+  event_id,
+  timestamp,
+  identity_context,
+  vector_type,        // cyber, physical, HUMINT, influence, supply-chain
+  severity,
+  indicators,         // IOCs, behaviors, anomalies
+  location_context,
+  device_context,
+  narrative_context,
+  confidence_score,
+  raw_source
+}
+```
+
+This schema enables **universal correlation** across all domains.
+
+---
+
+# 4. **Correlation Graph Engine**
+
+### Graph Types
+- **Identity Graph** — links accounts, devices, badges, comms, travel  
+- **Event Graph** — links anomalies across time and vector types  
+- **Actor Graph** — clusters events by suspected threat actor  
+- **Infrastructure Graph** — maps network, facility, and supply chain nodes  
+
+### Graph Operations
+- Node similarity  
+- Edge weighting  
+- Community detection  
+- Temporal clustering  
+- Influence propagation modeling  
+
+---
+
+# 5. **Temporal Correlation Engine**
+
+### Time Windows
+- **Short‑term:** 5 minutes → 2 hours  
+- **Mid‑term:** 2 hours → 48 hours  
+- **Long‑term:** 2 days → 30 days  
+
+### Temporal Logic Examples
+- Cyber anomaly + badge anomaly within 10 minutes  
+- Disinfo spike + diplomatic activity within 24 hours  
+- Insider threat drift + data exfiltration precursor within 7 days  
+
+---
+
+# 6. **Cross‑Vector Rule Engine**
+
+### Pre‑Built Correlation Rules
+- **Cyber → Physical:**  
+  Suspicious login + badge not present  
+
+- **Physical → Cyber:**  
+  Off‑hours facility entry + privileged command execution  
+
+- **Influence → Cyber:**  
+  Coordinated narrative spike + phishing wave  
+
+- **HUMINT → Cyber:**  
+  Foreign contact + credential abuse attempt  
+
+- **Supply Chain → Cyber:**  
+  Vendor compromise + anomalous network traffic  
+
+Each rule produces a **correlated threat event**.
+
+---
+
+# 7. **ML‑Driven Correlation Engine**
+
+### Models Used
+- Graph neural networks (GNNs)  
+- Temporal convolutional networks (TCNs)  
+- Multi‑modal transformers  
+- Bayesian inference for attribution  
+
+### Outputs
+- Hidden relationships  
+- Actor clustering  
+- Probability of coordinated activity  
+- Cross‑vector anomaly fusion score  
+
+---
+
+# 8. **Threat Event Constructor**
+
+This component produces the final **Unified Threat Event**:
+
+```
+{
+  threat_id,
+  correlated_events,
+  vectors_involved,
+  severity_score,
+  attribution_assessment,
+  impact_assessment,
+  recommended_actions,
+  leadership_summary
+}
+```
+
+This is the object consumed by dashboards, IR systems, and leadership briefings.
+
+---
+
+# 9. **Fusion Center Output Layer**
+
+### Outputs
+- **Unified Threat Dashboard**  
+- **Leadership Briefing Generator**  
+- **Hybrid Threat IR Platform**  
+- **Crisis Communications Orchestrator**  
+
+### Delivery Modes
+- Real‑time  
+- Scheduled  
+- Event‑triggered  
+
+---
+
+# 10. **Governance & Oversight**
+
+### Controls
+- Full audit logging  
+- Chain‑of‑custody for correlated events  
+- Explainability for ML correlations  
+- Redaction engine for sensitive data  
+- Role‑based access  
+
+---
+
+# 🔵 **Status Update — Master Project Progress**
+
+| # | Project | Status |
+|---|---------|--------|
+| 1–11 | All prior systems | ✔️ Produced |
+| 12 | **Cross‑Vector Correlation Engine** | 🔵 **Produced here** |
+| 13 | Unified Threat Dashboard | ⏳ Not yet produced |
+| 14 | Intelligence Ingestion Pipeline | ⏳ Not yet produced |
