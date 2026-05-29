@@ -1,0 +1,168 @@
+
+# 🌐 **Diplomatic Activity Monitor — Full Implementation Blueprint**
+
+This subsystem provides **early warning** of:
+
+- Foreign intelligence presence increases  
+- Unusual diplomatic travel  
+- Consular activity spikes  
+- Contact attempts with sensitive personnel  
+- Regional geopolitical escalations  
+- Diplomatic cover operations  
+- Pre‑incident shaping behaviors  
+
+It fuses **geopolitical intelligence**, **travel data**, **open‑source signals**, and **internal security telemetry**.
+
+---
+
+# 1. **System Architecture Overview**
+
+### Core Components
+- **Diplomatic Intelligence Collector** — ingests foreign diplomatic activity data  
+- **Travel Pattern Engine** — analyzes embassy/consulate travel  
+- **Contact Attempt Analyzer** — detects outreach to sensitive personnel  
+- **Geopolitical Context Engine** — enriches events with regional intelligence  
+- **Anomaly Detection Engine** — identifies deviations from normal diplomatic behavior  
+- **Threat Scenario Engine** — models known diplomatic‑linked threat patterns  
+- **Fusion Output Layer** — pushes alerts to dashboards & leadership briefings  
+
+---
+
+# 2. **Data Inputs**
+
+### A. Diplomatic & Government Sources
+- Embassy/consulate staffing changes  
+- Diplomatic travel itineraries  
+- Visa issuance patterns  
+- Public diplomatic statements  
+- Foreign delegation visits  
+
+### B. OSINT & Geopolitical Feeds
+- Newswire monitoring  
+- Social media activity of diplomatic accounts  
+- Regional conflict indicators  
+- Sanctions announcements  
+- International organization activity  
+
+### C. Internal Security Signals
+- Foreign contact attempts  
+- Sensitive employee travel  
+- Badge anomalies near diplomatic facilities  
+- HUMINT reports  
+
+### D. Travel & Movement Data
+- Flight manifests (where legally accessible)  
+- Hotel check‑ins (corporate travel systems)  
+- Border crossing metadata  
+
+---
+
+# 3. **Diplomatic Activity Feature Engineering**
+
+### Core Feature Categories
+- **Presence Drift** — changes in diplomatic staffing levels  
+- **Travel Entropy** — unpredictability in travel patterns  
+- **Regional Escalation Index** — geopolitical tension scoring  
+- **Contact Proximity Score** — closeness to sensitive personnel  
+- **Narrative Alignment Score** — alignment with influence operations  
+- **Temporal Correlation** — diplomatic activity preceding cyber/physical events  
+
+### Feature Storage
+- Stored in time‑series DB  
+- Indexed by country, mission, region, and identity  
+- Supports sliding‑window analysis (24h, 7d, 30d, 90d)  
+
+---
+
+# 4. **Anomaly Detection Engine**
+
+### ML Models
+- Isolation Forest for staffing anomalies  
+- LSTM models for travel pattern drift  
+- Bayesian changepoint detection for geopolitical shifts  
+- Multi‑modal transformers for OSINT pattern recognition  
+
+### Rule‑Based Models
+- Known diplomatic cover TTPs  
+- Pre‑incident diplomatic movements  
+- High‑risk consular activity patterns  
+- Sudden embassy closures or evacuations  
+
+### Output
+- Severity score  
+- Confidence score  
+- Contributing features  
+- Recommended actions  
+
+---
+
+# 5. **Threat Scenario Engine**
+
+### Pre‑Built Scenarios
+- **Diplomatic Cover for Intelligence Ops**  
+- **Pre‑Incident Diplomatic Movement**  
+- **Foreign Delegation Targeting Sensitive Personnel**  
+- **Consular Activity Spike + Cyber Intrusion**  
+- **Regional Escalation → Local Threat Increase**  
+
+Each scenario includes:
+- Required signals  
+- Detection logic  
+- Escalation thresholds  
+- Automated response options  
+
+---
+
+# 6. **Geopolitical Context Engine**
+
+### Context Sources
+- Regional conflict databases  
+- Diplomatic relations indices  
+- Sanctions lists  
+- International treaties  
+- Trade dependency data  
+
+### Outputs
+- Country risk score  
+- Regional tension score  
+- Diplomatic posture classification  
+- Likely intent assessment  
+
+---
+
+# 7. **Analyst Workbench Integration**
+
+### Capabilities
+- Diplomatic timeline visualization  
+- Travel pattern heatmaps  
+- Embassy/consulate staffing graphs  
+- Contact proximity mapping  
+- Geopolitical overlays  
+- Exportable case files  
+
+---
+
+# 8. **Response Automation**
+
+### Automated Actions
+- Notify foreign liaison office  
+- Alert insider threat team  
+- Trigger leadership briefing update  
+- Increase monitoring of targeted personnel  
+- Correlate with cyber/physical anomalies  
+
+### Integration Points
+- **Unified Threat Dashboard**  
+- **Cross‑Vector Correlation Engine**  
+- **Leadership Briefing Generator**  
+
+---
+
+# 9. **Governance & Oversight**
+
+### Controls
+- Strict privacy & legal compliance  
+- Redaction of sensitive personal data  
+- Diplomatic protocol adherence  
+- Full audit logging  
+- Chain‑of‑custody for intelligence sources  
